@@ -1,12 +1,15 @@
-from nonebot import on_command
-from .data_source import get_bt_info
-from services.log import logger
-from nonebot.adapters.onebot.v11 import PrivateMessageEvent, Message
-from nonebot.adapters.onebot.v11.permission import PRIVATE
 from asyncio.exceptions import TimeoutError
-from utils.utils import is_number
-from nonebot.params import CommandArg, ArgStr
+
+from nonebot import on_command
+from nonebot.adapters.onebot.v11 import Message, PrivateMessageEvent
+from nonebot.adapters.onebot.v11.permission import PRIVATE
+from nonebot.params import ArgStr, CommandArg
 from nonebot.typing import T_State
+
+from services.log import logger
+from utils.utils import is_number
+
+from .data_source import get_bt_info
 
 __zx_plugin_name__ = "磁力搜索"
 __plugin_usage__ = """
@@ -34,6 +37,7 @@ __plugin_configs__ = {
         "value": 10,
         "help": "单次BT搜索返回最大消息数量",
         "default_value": 10,
+        "type": int,
     }
 }
 
@@ -80,8 +84,8 @@ async def _(
     except TimeoutError:
         await bt.finish(f"搜索 {keyword} 超时...")
     except Exception as e:
-        await bt.finish(f"bt 其他未知错误..")
         logger.error(f"bt 错误 {type(e)}：{e}")
+        await bt.finish(f"bt 其他未知错误..")
     if not send_flag:
         await bt.send(f"{keyword} 未搜索到...")
     logger.info(f"USER {event.user_id} BT搜索 {keyword} 第 {page} 页")

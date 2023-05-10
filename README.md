@@ -5,20 +5,27 @@
 ![maven](https://img.shields.io/badge/go--cqhttp-1.0.0-red)
 
 # 绪山真寻Bot
+
 ****
 此项目基于 Nonebot2 和 go-cqhttp 开发，以 postgresql 作为数据库的QQ群娱乐机器人
+
 ## 关于
+
 用爱发电，某些功能学习借鉴了大佬们的代码，因为绪山真寻实在太可爱了因此开发了
 绪山真寻bot，实现了一些对群友的娱乐功能和实用功能（大概）。
 
 如果该项目的图片等等侵犯猫豆腐老师权益请联系我删除！  
 
-如果希望有个地方讨论绪山真寻Bot，或者有问题或建议，可以发送issues或加入[ <strong>[是真寻酱哒](https://jq.qq.com/?_wv=1027&k=u8PgBkMZ) </strong>]
+是新手！希望有个地方讨论绪山真寻Bot，或者有问题或建议，可以发送issues或加入[ <strong>[是真寻酱哒(萌新版)](https://jq.qq.com/?_wv=1027&k=u8PgBkMZ) </strong>]
+
+[//]: # (是老手！讨论插件开发，nonebot2开发，可以加入[ <strong>[真寻酱的技术群]&#40;https://jq.qq.com/?_wv=1027&k=u8PgBkMZ&#41; </strong>])
 
 ## 声明
+
 此项目仅用于学习交流，请勿用于非法用途
 
 # Nonebot2
+
 <img style="height: 200px;width: 200px;" src="https://camo.githubusercontent.com/0ef71e86056da694c540790aa4a4e314396884d6c4fdb95362a7538b27a1b034/68747470733a2f2f76322e6e6f6e65626f742e6465762f6c6f676f2e706e67">
 
 非常 [ **[NICE](https://github.com/nonebot/nonebot2)** ] 的OneBot框架
@@ -28,15 +35,23 @@
 # [传送门](https://hibikier.github.io/zhenxun_bot/)
 
 ## 真寻的帮助
+
 请对真寻说: '真寻帮助' or '管理员帮助' or '超级用户帮助' or '真寻帮助 指令'
 
 ## 普通帮助图片
-![x](https://github.com/HibiKier/zhenxun_bot/blob/0.0.8.2/docs_image/3238573864-836268675-E2FFBB2AC143EAF4DDDF150438508721.png)
+
+![x](https://raw.githubusercontent.com/HibiKier/zhenxun_bot/main/docs_image/help.png)
+
+## HTML版帮助图片
+
+![x](https://raw.githubusercontent.com/HibiKier/zhenxun_bot/main/docs_image/html_help.png)
 
 ## Web UI
+
 [zhenxun_bot_webui](https://github.com/HibiKier/zhenxun_bot_webui)
 
 ## 一键安装脚本
+
 [zhenxun_bot-deploy](https://github.com/AkashiCoin/zhenxun_bot-deploy)
 
 ## 提供符合真寻标准的插件仓库
@@ -45,151 +60,163 @@
 
 ## 来点优点？
 
-  * 实现了许多功能，且提供了大量功能管理命令
-  * 通过Config配置项将所有插件配置统计保存至config.yaml，利于统一用户修改
-  * 方便增删插件，原生nonebot2 matcher，不需要额外修改，仅仅通过简单的配置属性就可以生成`帮助图片`和`帮助信息`
-  * 提供了cd，阻塞，每日次数等限制，仅仅通过简单的属性就可以生成一个限制，例如：`__plugin_cd_limit__`
-  * __..... 更多详细请通过`传送门`查看文档！__
-
+* 实现了许多功能，且提供了大量功能管理命令
+* 通过Config配置项将所有插件配置统计保存至config.yaml，利于统一用户修改
+* 方便增删插件，原生nonebot2 matcher，不需要额外修改，仅仅通过简单的配置属性就可以生成`帮助图片`和`帮助信息`
+* 提供了cd，阻塞，每日次数等限制，仅仅通过简单的属性就可以生成一个限制，例如：`__plugin_cd_limit__`
+* __..... 更多详细请通过`传送门`查看文档！__
 
 ## 功能列表
+
 <details>
 <summary>已实现的功能</summary>
 
 ### 已实现的常用功能
-- [x] 昵称系统（群与群与私聊分开.）
-- [x] 图灵AI（会把'你'等关键字替换为你的昵称），且带有 [AnimeThesaurus](https://github.com/Kyomotoi/AnimeThesaurus)，够味
-- [x] 签到/我的签到/好感度排行/好感度总排行（影响色图概率和开箱次数，支持配置）
-- [x] 发送某文件夹下的随机图片（支持自定义，默认：美图，萝莉，壁纸）
-- [x] 色图（这不是基础功能嘛喂）
-- [x] coser
-- [x] 黑白草图生成器
-- [x] 鸡汤/语录
-- [x] 骂我（钉宫语音）
-- [x] 戳一戳（概率发送美图，钉宫语音或者戳回去）
-- [x] 模拟开箱/我的开箱/群开箱统计/我的金色/设置cookie（csgo，内置爬虫脚本，需要提前抓取数据和图片，需要session，可能需要代理，阿里云服务器等ip也许已经被ban了（我无代理访问失败），如果访问太多账号API调用可能被禁止访问api！）
-- [x] 鲁迅说过
-- [x] 构造假消息（自定义的分享链接）
-- [x] 商店/我的金币/购买道具/使用道具
-- [x] 8种手游抽卡 (查看 [nonebot_plugin_gamedraw](https://github.com/HibiKier/nonebot_plugin_gamedraw))
-- [x] 我有一个朋友想问问..（借鉴pcrbot插件）
-- [x] 原神黄历
-- [x] 原神今日素材
-- [x] 原神资源查询  (借鉴[Genshin_Impact_bot](https://github.com/H-K-Y/Genshin_Impact_bot)插件)
-- [x] 原神便笺查询
-- [x] 原神玩家查询
-- [x] 原神树脂提醒
-- [x] 原神签到/自动签到
-- [x] 金币红包
-- [x] 微博热搜
-- [x] B站主播/UP/番剧订阅
 
-- [x] pil对图片的一些操作
-- [x] BUFF饰品底价查询（需要session）
-- [x] 天气查询
-- [x] 疫情查询
-- [x] bt磁力搜索（咳咳，这功能我想dddd）
-- [x] reimu搜索（上车） (使用[XUN_Langskip](https://github.com/Angel-Hair/XUN_Bot)的插件)
-- [x] 靠图识番  (使用[XUN_Langskip](https://github.com/Angel-Hair/XUN_Bot)的插件)
-- [x] 以图搜图 (使用[nonebot_plugin_picsearcher](https://github.com/synodriver/nonebot_plugin_picsearcher)插件)
-- [x] 搜番
-- [x] 点歌  [nonebot_plugin_songpicker2](https://github.com/maxesisn/nonebot_plugin_songpicker2)插件（删除了选歌和评论）
-- [x] epic免费游戏
-- [x] p站排行榜
-- [x] p站搜图
-- [x] 翻译（日英韩）
-- [x] pix图库（一个自己的图库，含有增删查改，黑名单等命令）
+* [x] 昵称系统（群与群与私聊分开.）
 
-- [x] 查看当前群欢迎消息
-- [x] 查看该群自己的权限
-- [x] 我的信息（只是为了看看什么时候入群）
-- [x] 更新信息（如果继续更新的话）
-- [x] go-cqhttp最新版下载和上传（不需要请删除）
-- [x] 撤回
-- [x] 滴滴滴-（用户对超级用户发送消息）
-- [x] 金币红包/金币排行
-- [x] 俄罗斯轮盘/胜场排行/败场排行/欧洲人排行/慈善家排行
-- [x] 网易云热评
-- [x] 念首古诗
-- [x] 获取b站视频封面
-- [x] 通过PID获取图片
-- [x] 功能统计可视化
-- [x] 词云
-- [x] 关于
+* [x] 图灵AI（会把'你'等关键字替换为你的昵称），且带有 [AnimeThesaurus](https://github.com/Kyomotoi/AnimeThesaurus)，够味
+* [x] 签到/我的签到/好感度排行/好感度总排行（影响色图概率和开箱次数，支持配置）
+* [x] 发送某文件夹下的随机图片（支持自定义，默认：美图，萝莉，壁纸）
+* [x] 色图（这不是基础功能嘛喂）
+* [x] coser
+* [x] 黑白草图生成器
+* [x] 鸡汤/语录
+* [x] 骂我（钉宫语音）
+* [x] 戳一戳（概率发送美图，钉宫语音或者戳回去）
+* [x] 模拟开箱/我的开箱/群开箱统计/我的金色/设置cookie（csgo，内置爬虫脚本，需要提前抓取数据和图片，需要session，可能需要代理，阿里云服务器等ip也许已经被ban了（我无代理访问失败），如果访问太多账号API调用可能被禁止访问api！）
+* [x] 鲁迅说过
+* [x] 构造假消息（自定义的分享链接）
+* [x] 商店/我的金币/购买道具/使用道具
+* [x] 8种手游抽卡 (查看 [nonebot_plugin_gamedraw](https://github.com/HibiKier/nonebot_plugin_gamedraw))
+* [x] 我有一个朋友想问问..（借鉴pcrbot插件）
+* [x] 原神黄历
+* [x] 原神今日素材
+* [x] 原神资源查询  (借鉴[Genshin_Impact_bot](https://github.com/H-K-Y/Genshin_Impact_bot)插件)
+* [x] 原神便笺查询
+* [x] 原神玩家查询
+* [x] 原神树脂提醒
+* [x] 原神签到/自动签到
+* [x] 金币红包
+* [x] 微博热搜
+* [x] B站主播/UP/番剧订阅
+
+* [x] pil对图片的一些操作
+* [x] BUFF饰品底价查询（需要session）
+* [x] 天气查询
+* [x] 疫情查询
+* [x] bt磁力搜索（咳咳，这功能我想dddd）
+* [x] reimu搜索（上车） (使用[XUN_Langskip](https://github.com/Angel-Hair/XUN_Bot)的插件)
+* [x] 靠图识番  (使用[XUN_Langskip](https://github.com/Angel-Hair/XUN_Bot)的插件)
+* [x] 以图搜图 (使用[nonebot_plugin_picsearcher](https://github.com/synodriver/nonebot_plugin_picsearcher)插件)
+* [x] 搜番
+* [x] 点歌  [nonebot_plugin_songpicker2](https://github.com/maxesisn/nonebot_plugin_songpicker2)插件（删除了选歌和评论）
+* [x] epic免费游戏
+* [x] p站排行榜
+* [x] p站搜图
+* [x] 翻译（日英韩）
+* [x] pix图库（一个自己的图库，含有增删查改，黑名单等命令）
+
+* [x] 查看当前群欢迎消息
+* [x] 查看该群自己的权限
+* [x] 我的信息（只是为了看看什么时候入群）
+* [x] 更新信息（如果继续更新的话）
+* [x] go-cqhttp最新版下载和上传（不需要请删除）
+* [x] 撤回
+* [x] 滴滴滴-（用户对超级用户发送消息）
+* [x] 金币红包/金币排行
+* [x] 俄罗斯轮盘/胜场排行/败场排行/欧洲人排行/慈善家排行
+* [x] 网易云热评
+* [x] 念首古诗
+* [x] 获取b站视频封面
+* [x] 通过PID获取图片
+* [x] 功能统计可视化
+* [x] 词云
+* [x] 关于
 
 ### 已实现的管理员功能
-- [x] 更新群组成员信息
-- [x] 95%的群功能开关
-- [x] 查看群内被动技能状态
-- [x] 自定义群欢迎消息（是真寻的不是管家的！）
-- [x] .ban/.unban（支持设置ban时长）= 黑白名单
-- [x] 刷屏禁言相关：刷屏检测设置/设置禁言时长/设置检测次数
-- [x] 上传图片/连续上传图片 （上传图片至指定图库）
-- [x] 移动图片  （同上）
-- [x] 删除图片  （同上）
-- [x] 群内B站订阅
-- [x] 群词条
-- [x] 休息吧/醒来
+
+* [x] 更新群组成员信息
+
+* [x] 95%的群功能开关
+* [x] 查看群内被动技能状态
+* [x] 自定义群欢迎消息（是真寻的不是管家的！）
+* [x] .ban/.unban（支持设置ban时长）= 黑白名单
+* [x] 刷屏禁言相关：刷屏检测设置/设置禁言时长/设置检测次数
+* [x] 上传图片/连续上传图片 （上传图片至指定图库）
+* [x] 移动图片  （同上）
+* [x] 删除图片  （同上）
+* [x] 群内B站订阅
+* [x] 词条设置
+* [x] 休息吧/醒来
 
 ### 已实现的超级用户功能
-- [x] 添加/删除权限（是真寻的管理员权限，不是群管理员）
-- [x] 开启/关闭指定群的广播通知
-- [x] 广播
-- [x] 自检（检查系统状态）
-- [x] 所有群组/所有好友
-- [x] 退出指定群
-- [x] 更新好友信息/更新群信息
-- [x] /t（对用户进行回复或发送消息）
-- [x] 上传/删除/修改商品（需要编写对应的商品功能）
-- [x] 节日红包发送
-- [x] 修改群权限
-- [x] ban
-- [x] 更新色图
-- [x] 更新价格/更加图片（csgo开箱）
-- [x] 重载原神/方舟/赛马娘/坎公骑冠剑卡池
-- [x] 更新原神今日素材/更新原神资源信息
-- [x] PIX相关操作
-- [x] 检查更新真寻
-- [x] 重启
-- [x] 添加/删除/查看群白名单
-- [x] 功能开关(更多设置)
-- [x] 功能状态
-- [x] b了
-- [x] 执行sql
-- [x] 重载配置
-- [x] 清理临时数据
-- [x] 增删群认证
-- [x] 同意/拒绝好友/群聊请求
-- [x] 配置重载
+
+* [x] 添加/删除权限（是真寻的管理员权限，不是群管理员）
+
+* [x] 开启/关闭指定群的广播通知
+* [x] 广播
+* [x] 自检（检查系统状态）
+* [x] 所有群组/所有好友
+* [x] 退出指定群
+* [x] 更新好友信息/更新群信息
+* [x] /t（对用户进行回复或发送消息）
+* [x] 上传/删除/修改商品（需要编写对应的商品功能）
+* [x] 节日红包发送
+* [x] 修改群权限
+* [x] ban
+* [x] 更新色图
+* [x] 更新价格/更加图片（csgo开箱）
+* [x] 重载原神/方舟/赛马娘/坎公骑冠剑卡池
+* [x] 更新原神今日素材/更新原神资源信息
+* [x] PIX相关操作
+* [x] 检查更新真寻
+* [x] 重启
+* [x] 添加/删除/查看群白名单
+* [x] 功能开关(更多设置)
+* [x] 功能状态
+* [x] b了
+* [x] 执行sql
+* [x] 重载配置
+* [x] 清理临时数据
+* [x] 增删群认证
+* [x] 同意/拒绝好友/群聊请求
+* [x] 配置重载
 
 #### 超级用户的被动技能
-- [x] 邀请入群提醒(别人邀请真寻入群)
-- [x] 添加好友提醒(别人添加真寻好友)
+
+* [x] 邀请入群提醒(别人邀请真寻入群)
+
+* [x] 添加好友提醒(别人添加真寻好友)
 
 ### 已实现的被动技能
-- [x] 进群欢迎消息
-- [x] 群早晚安
-- [x] 每日开箱重置提醒
-- [x] b站转发解析（解析b站分享信息，支持bv，bilibili链接，b站手机端转发卡片，cv，b23.tv），且5分钟内不解析相同url
-- [x] 丢人爬（爬表情包）
-- [x] epic通知（每日发送epic免费游戏链接）
-- [x] 原神黄历提醒
-- [x] 复读
 
-### 已实现的看不见的技能！
-- [x] 刷屏禁言检测
-- [x] 功能调用统计
-- [x] 检测恶意触发命令（将被最高权限ban掉30分钟，只有最高权限(9级)可以进行unban）
-- [x] 自动同意好友请求，加群请求将会提醒管理员，退群提示，加群欢迎等等
-- [x] 群聊时间检测（当群聊最后一人发言时间大于当前36小时后将关闭该群所有通知（即被动技能））
-- [x] 群管理员监控，自动为新晋管理员增加权限，为失去群管理员的用户删除权限
-- [x] 群权限系统
-- [x] 定时更新权限
-- [x] 自动配置重载
+* [x] 进群欢迎消息
+
+* [x] 群早晚安
+* [x] 每日开箱重置提醒
+* [x] b站转发解析（解析b站分享信息，支持bv，bilibili链接，b站手机端转发卡片，cv，b23.tv），且5分钟内不解析相同url
+* [x] 丢人爬（爬表情包）
+* [x] epic通知（每日发送epic免费游戏链接）
+* [x] 原神黄历提醒
+* [x] 复读
+
+### 已实现的看不见的技能
+
+* [x] 刷屏禁言检测
+
+* [x] 功能调用统计
+* [x] 检测恶意触发命令（将被最高权限ban掉30分钟，只有最高权限(9级)可以进行unban）
+* [x] 自动同意好友请求，加群请求将会提醒管理员，退群提示，加群欢迎等等
+* [x] 群聊时间检测（当群聊最后一人发言时间大于当前36小时后将关闭该群所有通知（即被动技能））
+* [x] 群管理员监控，自动为新晋管理员增加权限，为失去群管理员的用户删除权限
+* [x] 群权限系统
+* [x] 定时更新权限
+* [x] 自动配置重载
+
 </details>
 
 ## 详细配置请前往文档，以下为最简部署和配置，如果你有基础并学习过nonebot2的话
-
 
 ## 简单部署
 
@@ -233,369 +260,472 @@ python bot.py
 
 ```
 
-
 ## 使用Docker
-__Docker 最新版本由 [Sakuracio](https://github.com/Sakuracio) 提供__
-#### GitHub：[Sakuracio/zhenxun_bot_docker](https://github.com/Sakuracio/zhenxun_bot_docker)
-#### DockerHub：[hibikier/zhenxun_bot](https://hub.docker.com/r/hibikier/zhenxun_bot)
 
+**Docker 单机版（仅真寻Bot）**  
+**点击下方的 GitHub 徽标查看教程**  
+[![Github](https://shields.io/badge/GITHUB-Sakuracio-4476AF?logo=github&style=for-the-badge)](https://github.com/Sakuracio/zhenxun_bot_docker)  
+[![DOCKER](https://shields.io/badge/docker-hibikier/zhenxun_bot-4476AF?logo=docker&style=for-the-badge)](https://hub.docker.com/r/hibikier/zhenxun_bot)  
+**Docker 全量版（包含 真寻Bot PostgreSQL数据库 go-cqhttp webui等）**  
+[![Github](https://shields.io/badge/GITHUB-SinKy--Yan-4476AF?logo=github&style=for-the-badge)](https://github.com/SinKy-Yan/zhenxunbot-docker)  
+[![DOCKER](https://shields.io/badge/docker-jyishit/zhenxun_bot-4476AF?logo=docker&style=for-the-badge)](https://hub.docker.com/r/jyishit/zhenxun_bot)  
+**点击上方的 GitHub 徽标查看教程**  
+PS: **ARM平台** 请使用全量版 同时 **如果你的机器 RAM < 1G 可能无法正常启动全量版容器**
 
+## [爱发电](https://afdian.net/@HibiKier)
+
+<details>
+<summary>爱发电 以及 感谢投喂 </summary>
+<img width="365px" height="450px" src="https://user-images.githubusercontent.com/45528451/175059389-cfeb8174-fa07-4939-80ab-a039087a50f6.png">
+
+### 感谢名单
+
+(可以告诉我你的 **github** 地址，我偷偷换掉0v|)  
+
+[shenqi](https://afdian.net/u/fa923a8cfe3d11eba61752540025c377)
+[A_Kyuu](https://afdian.net/u/b83954fc2c1211eba9eb52540025c377)
+[疯狂混沌](https://afdian.net/u/789a2f9200cd11edb38352540025c377)
+[投冥](https://afdian.net/a/144514mm)
+[茶喵](https://afdian.net/u/fd22382eac4d11ecbfc652540025c377)
+[AemokpaTNR](https://afdian.net/u/1169bb8c8a9611edb0c152540025c377)
+[爱发电用户_wrxn](https://afdian.net/u/4aa03d20db4311ecb1e752540025c377)
+[qqw](https://afdian.net/u/b71db4e2cc3e11ebb76652540025c377)
+[溫一壺月光下酒](https://afdian.net/u/ad667a5c650c11ed89bf52540025c377)  
+[伝木](https://afdian.net/u/246b80683f9511edba7552540025c377)  
+[阿奎](https://afdian.net/u/da41f72845d511ed930d52540025c377)  
+[醉梦尘逸](https://afdian.net/u/bc11d2683cd011ed99b552540025c377)  
+[Abc](https://afdian.net/u/870dc10a3cd311ed828852540025c377)  
+[本喵无敌哒](https://afdian.net/u/dffaa9005bc911ebb69b52540025c377)  
+[椎名冬羽](https://afdian.net/u/ca1ebd64395e11ed81b452540025c377)  
+[kaito](https://afdian.net/u/a055e20a498811eab1f052540025c377)  
+[笑柒XIAO_Q7](https://afdian.net/u/4696db5c529111ec84ea52540025c377)  
+[请问一份爱多少钱](https://afdian.net/u/f57ef6602dbd11ed977f52540025c377)  
+[咸鱼鱼鱼鱼](https://afdian.net/u/8e39b9a400e011ed9f4a52540025c377)  
+[Kafka](https://afdian.net/u/41d66798ef6911ecbc5952540025c377)  
+[墨然](https://afdian.net/u/8aa5874a644d11eb8a6752540025c377)
+[爱发电用户_T9e4](https://afdian.net/u/2ad1bb82f3a711eca22852540025c377)  
+[笑柒XIAO_Q7](https://afdian.net/u/4696db5c529111ec84ea52540025c377)  
+[noahzark](https://afdian.net/a/noahzark)  
+[腊条](https://afdian.net/u/f739c4d69eca11eba94b52540025c377)  
+[ze roller](https://afdian.net/u/0e599e96257211ed805152540025c377)  
+[爱发电用户_4jrf](https://afdian.net/u/6b2cdcc817c611ed949152540025c377)  
+[爱发电用户_TBsd](https://afdian.net/u/db638b60217911ed9efd52540025c377)  
+[烟寒若雨](https://afdian.net/u/067bd2161eec11eda62b52540025c377)  
+[ln](https://afdian.net/u/b51914ba1c6611ed8a4e52540025c377)  
+[爱发电用户_b9S4](https://afdian.net/u/3d8f30581a2911edba6d52540025c377)  
+[爱发电用户_c58s](https://afdian.net/u/a6ad8dda195e11ed9a4152540025c377)  
+[爱发电用户_eNr9](https://afdian.net/u/05fdb41c0c9a11ed814952540025c377)
+[MangataAkihi](https://github.com/Sakuracio)
+[炀](https://afdian.net/u/69b76e9ec77b11ec874f52540025c377)
+[爱发电用户_Bc6j](https://afdian.net/u/8546be24f44111eca64052540025c377)  
+[大魔王](https://github.com/xipesoy)
+[CopilotLaLaLa](https://github.com/CopilotLaLaLa)  
+[嘿小欧](https://afdian.net/u/daa4bec4f24911ec82e552540025c377)
+[回忆的秋千](https://afdian.net/u/e315d9c6f14f11ecbeef52540025c377)  
+[十年くん](https://github.com/shinianj)
+[哇](https://afdian.net/u/9b266244f23911eca19052540025c377)  
+[yajiwa](https://github.com/yajiwa)  
+[爆金币](https://afdian.net/u/0d78879ef23711ecb22452540025c377)  
+
+</details>
 
 ## 更新
 
-### 2022/5/30
-
-* 商店插件判断是否有requirements.txt文件
-
-### 2022/5/29 \[v0.1.5.8]
-
-* 提供了真寻适配仓库的插件 安装/卸载 操作
-* 暂时关闭了插件资源清空
-* 通过指令安装插件时会在插件目录下生成plugin_info.json记录当前插件信息
+### 2023/4/16
 
-### 2022/5/28
+* 修复开箱更新未登录时没有停止更新
+* 修复更新色图问题
+* fix bug [@pull/1368](https://github.com/HibiKier/zhenxun_bot/pull/1368)
+* `BilibiliSub`的部分字段改为字符串
 
-* 修复私聊无法添加昵称
-* 修复原神玩家查询层岩巨渊地下矿区没开时报错
-* 修复 ```休息吧``` 无法阻断戳一戳
-* 当图库无图片时，戳一戳将略过发送图片
-* 新增搜图提供配置项```ALLOW_GROUP_R18```：允许在群聊中使用r18参数
-* 新增自动更新插件```UPDATE_REMIND```：新版本提醒，原配置项```AUTO_UPDATE_ZHENXUN```改为自动更新升级
-* black_word新增当群权限为-1时不再检测该群
-* 修复非超级用户绑定原神cookie会被black_word阻拦
-* 修复webui中plugins2setting修改时会改变plugins2setting.cmd为字符串
-* 修复微博热搜报错,发红包小bug [@pull/688](https://github.com/HibiKier/zhenxun_bot/pull/688)
-* 更多的中文提示
+### 2023/4/5
 
-### 2022/5/26
+* 词条正则回答中允许使用$1.$2..来获取()捕获组
 
-* 修复\[滴滴滴]会被转义成&#91;滴滴滴&#93;导致无法触发的问题
-* 将一些错误以中文提示输出
-* 更新BT搜索源地址 [@pull/668](https://github.com/HibiKier/zhenxun_bot/pull/668)
-* 更新抽卡插件 [@pull/667](https://github.com/HibiKier/zhenxun_bot/pull/667)
+### 2023/4/3
 
-### 2022/5/25
+* 修复帮助命令`-super`无效
 
-* 修复webui中CountLimit字段limit_type类型错误
-* 修改nickname插件：一处文案错误，添加敏感词 [@pull/624](https://github.com/HibiKier/zhenxun_bot/pull/624)
-* gamedraw的ba卡池搬运了过来并且进行了真寻的适配 [@pull/617](https://github.com/HibiKier/zhenxun_bot/pull/617)
-* feat: stream downloading and progress [@pull/607](https://github.com/HibiKier/zhenxun_bot/pull/607)
-* 修改翻译插件，添加缺失的冒号 [@pull/602](https://github.com/HibiKier/zhenxun_bot/pull/602)
-* 修复碧蓝航线/明日方舟up池解析出错的问题 [@pull/610](https://github.com/HibiKier/zhenxun_bot/pull/602)
+### 2023/4/1
 
-### 2022/5/24
+* 修复开箱偶尔出现`未抽取到任何皮肤`
+* 修改优化开箱显示图片
 
-* fix: 修正了签到时日期时间的显示不补齐零的bug （符合日期时间表示法 ISO 8601）[@pull/600](https://github.com/HibiKier/zhenxun_bot/pull/600)
-* 更新"微博热搜"接口 [@pull/579](https://github.com/HibiKier/zhenxun_bot/pull/579)
-* refactor&fix(manager): modify argument [@pull/576](https://github.com/HibiKier/zhenxun_bot/pull/576)
-* 修复复读不能复读图片的问题 [@pull/573](https://github.com/HibiKier/zhenxun_bot/pull/573)
-* 修复抽卡插件：方舟抽卡的抽取和显示问题 [@pull/581](https://github.com/HibiKier/zhenxun_bot/pull/581)
+### 2023/3/28
 
-### 2022/5/23 \[v0.1.5.6]
+* 补全注释`SCRIPT`中的sql语句
+* 罕见物品更新时会收录所有包含该物品的箱子，可以通过`更新皮肤ALL1 -S`强制更新所有罕见物品所属箱子
 
-* 修复"清除已删除插件数据" [@pull/545](https://github.com/HibiKier/zhenxun_bot/pull/545)
-* 修复有置顶的up主B站动态获取失败 [@pull/552](https://github.com/HibiKier/zhenxun_bot/pull/552)
-* 添加pixiv搜图多关键词支持;修复p站搜图数量参数问题 [@pull/441](https://github.com/HibiKier/zhenxun_bot/pull/441)
-* 修复开箱更新价格错误传参
-* 修复pix无法正确查询uid
-* 新增色图插件添加配置项```ALLOW_GROUP_R18```：允许群聊中使用色图r
-* 新增PIX插件添加配置项```ALLOW_GROUP_SETU```：允许非超级用户使用-s参数
-* 新增PIX插件添加配置项```ALLOW_GROUP_R18```：允许非超级用户使用-r参数
+### 2023/3/27
 
-### 2022/5/22 \[v0.1.5.4]
+* 优化开箱更新
 
-* 使用action自动更新poetry.lock [@pull/515](https://github.com/HibiKier/zhenxun_bot/pull/515)
-* fix(bilibili_sub): card is None and timeout [@pull/516](https://github.com/HibiKier/zhenxun_bot/pull/516)
-* 修复了epic有时获取新免费游戏消息时获取不到图片
-* 修复好感度满时签到出错（虽然是不可能满的
-* 修复原神资源图标下载路径错误
-* 修复自动更新群组可能失败
+### 2023/3/25
 
-### 2022/5/21
+* 删除BUFF_SKIN表约束，新增`skin_id`字段
+* 开箱新增更新指定刀具皮肤命令(某些箱子金色无法通过api获取)
+* 修复词条At时bug与模糊查询时无法替换占位符问题
 
-* 修复搜番无结果时报错无正确反馈
-* 解锁了windows上无法使用playwright的限制
-* 修复p搜对应pid有多张图时出错，改为连续发送图片
-* 修复p搜对数字的错误判断
-* 修复添加商品折扣无法正确添加
-* 修复了bilibili订阅直播间订阅up名称不一致的问题
-* 修复原神玩家查询没开地图时报错
-* 最低priority修改为 999
-* 修复刷屏检测失效
-* 修复刷屏检测设置命令无法生效
-* 优化刷屏显示设置禁言时长显示，并改为分钟
-* 修复了多连开箱无法指定武器箱
-* 修复识番链接无法正确获取
-* 新增真寻入群时即刻刷新权限
-* 提高了微博热搜截图的等待时间
+### 2023/3/20
 
-### 2022/5/19
+* 修复BuildImage类text居中类型bug [@pull/1301](https://github.com/HibiKier/zhenxun_bot/pull/1317)
+* 修复原神今日素材有时发不出图片的问题 [@pull/1301](https://github.com/HibiKier/zhenxun_bot/pull/1317)
+* 修复首次签到时使用道具后签到报错
+* 修复词条添加错误
 
-* fix: mihoyo bbs api changed [@pull/357](https://github.com/HibiKier/zhenxun_bot/pull/357)
-* Add word_clouds [@pull/265](https://github.com/HibiKier/zhenxun_bot/pull/265)
-* Fix wrong live streamer name [@pull/284](https://github.com/HibiKier/zhenxun_bot/pull/284)
+### 2023/3/19
 
-### 2022/5/16
+* 优化代码
+* 查看武器箱及皮肤添加更新次数
+* 修复添加群认证会检测群聊是否存在
+* 修复色图r连发时未检测当前会话是否为群聊
 
-* 词条支持图片和@问题 [@pull/160](https://github.com/HibiKier/zhenxun_bot/pull/160)
+### 2023/3/18
 
-### 2022/5/15
+* 修复色图重复发送相同图片
+* 修复签到好感度进度条错误
 
-* 修复了商店商品无法正确添加
-* 修复了多张色图无法正确发送
+### 2023/3/12 \[v0.1.6.7]
 
-### 2022/5/14
+* 新增`更新武器箱ALL`命令来更新所有武器箱
+* 新增`查看武器箱`命令
+* 色图bug修复、增加指令 [@pull/1301](https://github.com/HibiKier/zhenxun_bot/pull/1301)
 
-* 修复B站动态生成失败的问题 [@pull/159](https://github.com/HibiKier/zhenxun_bot/pull/159)
+### 2023/3/9
 
-### 2022/5/11
+* 更正sql语句 [@pull/1302](https://github.com/HibiKier/zhenxun_bot/pull/1302)
+* 修改签到卡片中签到增加好感度显示错误 [@pull/1299](https://github.com/HibiKier/zhenxun_bot/pull/1299)
 
-* fix: 更改p搜api，解决p搜无法使用的问题 [@pull/155](https://github.com/HibiKier/zhenxun_bot/pull/155)
+### 2023/3/5
 
-### 2022/5/9 \[v0.1.5.3]
+* 更新开箱会记录箱子数据以及开箱时箱子价格加入花费
+* 修复开箱BUG
 
-* 替换了疫情API
-* 修复了私聊.ban/.unban出错
+### 2023/3/4
 
-### 2022/5/5
+* 重写翻译，使用百度翻译API
+* 新增开箱日志以及自动更新武器箱
 
-* 修改bilibili_sub插件在windows平台下报错 [@pull/153](https://github.com/HibiKier/zhenxun_bot/pull/153)
+### 2023/3/2
 
-### 2022/5/3 \[v0.1.5.2]
+* 修复config.yaml中把False也当成None的问题 [@pull/1288](https://github.com/HibiKier/zhenxun_bot/pull/1288)
+* 删除道具表无用字段(props) [@pull/1287](https://github.com/HibiKier/zhenxun_bot/pull/1287)
+* 修复词云
+* 修复我的签到签到图片
+* 更正BuffSkin添加语句
+* 修复词条单图片/表情/at无法添加
 
-* 商品使用函数可以添加特定参数，例如：user_id, group_id, ShopParam等以及自己提供的参数
-* 添加商品注册装饰器shop_register
-* 修复商品函数kwargs无法获取参数值
+### 2022/3/1
 
+* 重写开箱更新箱子，允许更新目前所有箱子的皮肤
+* 修复消息统计
 
-### 2022/5/1
+### 2023/2/28
 
-* 删除了`group_last_chat`插件（该功能可由`chat_history`替代
-* 新增敏感词检测（全新反击系统，是时候重拳出击了
+* 把Config的type字段默认类型由str改为None [@pull/1283](https://github.com/HibiKier/zhenxun_bot/pull/1283)
+* 修复同意群聊请求以及添加群认证 更新变成查询的问题 [@pull/1282](https://github.com/HibiKier/zhenxun_bot/pull/1282)
 
-### 2022/4/26
+### 2023/2/26
 
-* 修复了群白名单无法正确添加
-* 优化了管理员帮助图片，背景图层将位于最下层
-* 修复了树脂140时不断提醒（未测试
-* 新增了消息记录的消息排行
-* WebUI新增CPU，内存，磁盘监控
-* WebUI新增资源文件夹统计可视化
+* Config提供`type`字段确定配置项类型
+* 重写开箱功能
 
-### 2022/4/12
+### 2023/2/25
 
-* 修复b了命令私聊出错
+* 修复ys查询，尘歌壶背景尺寸与内容不匹配的问题 [@pull/1270](https://github.com/HibiKier/zhenxun_bot/pull/1275)
+* 更换cos url [@pull/1270](https://github.com/HibiKier/zhenxun_bot/pull/1274)
 
-### 2022/4/10 \[v0.1.4.7]
+### 2023/2/20
 
-* 新增消息记录模块
-* 丰富处理请求操作提示
-* web ui新增配置项修改
+* chat_history部分字段调整为可null [@pull/1270](https://github.com/HibiKier/zhenxun_bot/pull/1270)
 
-### 2022/4/9
+### 2023/2/19
 
-* fix: 更新问题，戳一戳图片路径问题 [@pull/144](https://github.com/HibiKier/zhenxun_bot/pull/144)
+* 修正了`重载插件`的帮助提示
+* 修改BUG
 
-### 2022/4/8
+### 2023/2/18
 
-* 修复原神玩家查询
+* 数据库舍弃`gino`使用`tortoise`
+* 昵称提供命令`全局昵称设置`
+* `manager_group`群管理操作中`退群`，`修改群权限`，`添加/删除群白名单`，`添加/删除群认证`在群聊中使用命令时且未指定群聊时，默认指定当前群聊
+* 修复插件帮助命令不生效的问题 [@pull/1263](https://github.com/HibiKier/zhenxun_bot/pull/1263)
+* 解决开红包经常误触的问题，有红包和未领取的时候才会触发“开”命令 [@pull/1257](https://github.com/HibiKier/zhenxun_bot/pull/1257)
+* 细节优化，原神今日素材重写 [@pull/1258](https://github.com/HibiKier/zhenxun_bot/pull/1258)
 
-### 2022/4/6
+### 2023/1/31
 
-* update search_type [@pull/143](https://github.com/HibiKier/zhenxun_bot/pull/143)
+* 修复B站转发卡片BUG [@pull/1249](https://github.com/HibiKier/zhenxun_bot/pull/1249)
 
-### 2022/4/5 \[v0.1.4.6]
+### 2023/1/27
 
-* 修复web修改插件后帮助图片生成错误
+* 替换pixiv反向代理地址 [@pull/1244](https://github.com/HibiKier/zhenxun_bot/pull/1244)
 
-### 2022/4/4 \[v0.1.4.5]
+### 2022/12/31
 
-* 替换了bt搜索URL
-* 优化使用playwright的相关代码
-* 原神玩家查询新增层岩巨渊探索
-* 修复原神便笺角色头像黑框
-* 修复同意群聊请求错误
-* 提供webui方面的api
-* 新增web-ui（前端简易管理页面插件）插件
+* 修复epic报错，优化简介 [@pull/1226](https://github.com/HibiKier/zhenxun_bot/pull/1226)
+* 修复词条在某些回答下出错
+* 原神黄历改为PIL
+* 允许真寻自身触发命令，提供配置项 `self_message:STATUS`
 
-### 2022/3/21
+### 2022/12/27 \[v0.1.6.6]
 
-* 修复statistics_handle.py乱码
+* 添加权限检查依赖注入
 
-### 2022/3/18 \[v0.1.4.4]
+### 2022/12/26
 
-* 修复戳一戳无法功能关闭与ban禁用
-* 新增图片搜索 search_image
+* 优化`gamedraw`插件
+* 提供全局被动控制
+* 群被动状态改为图片
+* 修复epic获取到的简介不是中文的bug [@pull/1221](https://github.com/HibiKier/zhenxun_bot/pull/1221)
 
-### 2022/3/7
+## 2022/12/24
 
-* 优化增删权限插件
+* 修复群管理员权限检测会阻挡超级用户权限
 
-### 2022/3/6
+### 2022/12/23
 
-* 修复树脂提醒无法开启
-* 修复p搜图片路径错误
+* 优化`管理员帮助`，`超级用户帮助`图片
+* 重新移植`gamedraw`
+* 修复pil帮助私聊时无法生成
 
-### 2022/3/3 \[v0.1.4.3]
+### 2022/12/17
 
-* 修复手动同意群聊请求依旧退出
+* 修复查看插件仓库当已安装插件版本不一致时出错
 
-### 2022/3/1 \[v0.1.4.2]
+### 2022/12/15
 
-* 0.1.4内容
+* 修复自定义群欢迎消息无法使用
 
-### 2022/2/27 \[v0.1.4.1]
+### 2022/12/13
 
-* 优化抽卡
+* 修复.unban
 
-### 2022/2/25 \[v0.1.4]
+### 2022/12/12
 
-* PIX提供配置MAX_ONCE_NUM2FORWARD：当单次发送图片超过指定张数且在群聊时，将转为合并消息
-* 修复点歌无法正确发送
-* 修复我有一个朋友有时文本会包含CQ码
-* 修复群欢消息被动控制文本未删除 [@pull/124](https://github.com/HibiKier/zhenxun_bot/pull/124)
-* message_builder.image不再提供参数：abspath
+* 修改HTML帮助禁用提示文本错误
+* 修复HTML帮助私聊无法生成
 
-### 2022/2/23
+### 2022/12/11
 
-* 插件状态将从已加载插件模块中读取
-* 修复b站订阅插件订阅失败问题
-* 修复重启命令无法使用
+* 词条问题支持真寻的昵称开头与at真寻开头并优化回复
+* 帮助新增HTML生成（新布局），添加配置`TYPE`切换
+* 更正私聊时功能管理回复错误
+* 修复加入新群聊时初始化功能开关错误
+* 添加单例注解
+* 添加统计表
 
-### 2022/2/21 \[v0.1.3.2]
+### 2022/12/10
 
-* 群权限为-1时，超级用户发送的命令依旧生效
-* 当群权限为-1时，被动技能也将不会发送
-* 修复功能开关，b站转发解析，复读 ignore无法使用
-* 修复色图下载文件名与路径错误
-* 修复被动技能提醒有时无法删除控制文本
+* 重写帮助，删除 `详细帮助` 命令
 
+### 2022/12/4
 
-### 2022/2/20 \[v0.1.3.1]
+* 优化管理代码
 
-* 修复pix下载临时文件目录错误
-* 修复AI，天气，发送图片ignore导致无法使用
-* 修复纯文本被动技能提醒有时无法删除控制文本
+### 2022/11/28
 
-### 2022/2/19 \[v0.1.3] (nonebot beta2！)
+* 修复web_ui群组无法获取
+* 修复web_ui修改插件数据时cmd格式错误
 
-* 由于nonebot升级版本，提供更新建议（__该次升级将会导致nonebot.beta1以下的插件无法使用__
-  * 保证services，utils，configs，plugins，basic_plugins，文件夹均为最新
-  * 根目录有pyproject.toml与poetry.lock
-  * 执行命令：
-    * pip3 install poetry
-    * poetry install
-    * poetry shell
-    * playwright install chromium
-    * python3 bot.py
+### 2022/11/28
 
+* :bug: Fix a bug in open_cases to get vanilla knives' prices [@pull/1188](https://github.com/HibiKier/zhenxun_bot/pull/1188)
 
-* 适配nonebot.beta2
-* 删除图片搜索 nonebot_plugin_picsearcher
-* 替换cos api
-* 原神签到树脂提醒新增绑定群里，在某群绑定uid就会在某群发送提醒信息（有好友则私聊，需要重新绑定uid
-* 修改update_info.json
-* 修复原神资源查询下载数据失败时导致报错
-* 优化BuildImage.circle()锯齿问题 [@pull/109](https://github.com/HibiKier/zhenxun_bot/pull/109)
-* epic restful 替换 [@pull/119](https://github.com/HibiKier/zhenxun_bot/pull/119)
-* fix: 修复远古时期残留的epic推送问题 [@pull/122](https://github.com/HibiKier/zhenxun_bot/pull/122)
+### 2022/11/24
 
-### 2022/2/11
+* 修复管理员插件加载路径错误
 
-* 修复pix不使用反代无法下载图片
+### 2022/11/23
 
-### 2022/2/10 \[v0.1.1]
+* 修复webui插件无法获取修改
 
-* 修复购买道具出错
+### 2022/11/22
 
-### 2022/2/9 \[v0.1]
+* fix switch_rule [@pull/1185](https://github.com/HibiKier/zhenxun_bot/pull/1185)
 
-* 新增原神自动签到和手动签到
-* 新增原神树脂提醒
-* 新增手动重载Config.yaml命令以及重载配置定时任务（极少部分帮助或配置可能需要重启
-* 修改了发送本地图库的matcher，改为on_message
-* register_use可以通过返回值发送消息
-* 修复修改商品时限制时间出错
-* 修复超时商品依旧可以被购买
+### 2022/11/21  \[v0.1.6.5]
 
-### 2022/1/16 \[v0.0.9.0]
+* 优化manager, hook代码
+* 修复pid搜图 [@pull/1180](https://github.com/HibiKier/zhenxun_bot/pull/1180)
 
-* Ai提供文本敏感词过滤器
-* 疫情插件适配新版腾讯API
-* 修复/t回复带空格切分
-* 修复原神玩家查询缺少渊下宫和稻妻家园以及角色不完全
-* 修复方法 text2image 中 padding 和 font 无法对纯文本生效
-* 修复签到图片中信息并未使用配置文件中的色图概率
-* 修改原神大地图合成方式，改为先压缩再合成
-* bag_user弃用字段props（该字段会在下次更新删除），使用新字段property
-* 数据库中所有belonging_group统一修改为group_id
-* 商店将registered_use和register_goods更名为register_use何register_goods
-* 商品注册提供了kwargs参数提供：
-    * bot 
-    * event
-    * 特殊字段
-      * “send_success_msg”(发送成功的交互信息->即：使用道具 {name} {num} 次成功)
-      * “_max_num_limit”(该道具单次使用的最多个数，默认1)
+### 2022/11/19
 
-### 2022/1/5 \[v0.0.8.2]
+* 修改优化帮助图片生成逻辑
 
-* 提供金币消费hook，可在plugins2settings.yaml中配置该功能需要消费的金币
-* 商店插件将作为内置插件移动至basic_plugins
-* 商店插件通过export提供了方法，不需要修改商店插件代码添加商品数据和生效方法
-* 修改了hook插件顺序，主要以auth_hook为主
-* 修改商店图片样式
-* 取消每次启动更新城市列表（首次除外），采用定时更新，加快bot启动速度
-* 取消每次启动时截取今日素材，采用调用时截取保存，加快bot启动速度
-* 更新色图时当图片404时会删除并替换
-* 疫情消息回复改为图片
-* 修复商店折扣和限时时间无法生效
-* 修复原神玩家查询尘歌壶缺少图片
+### 2022/11/18
 
-### 2021/12/26
+* poetry添加适配器依赖，更新支持py3.10 [@pull/1176](https://github.com/HibiKier/zhenxun_bot/pull/1176)
 
-* 修复群词条问题 空格 会被录入导致不断回复
-* 修复米游社app替换api导致无法正常查询
+### 2022/11/13
 
-### 2021/12/24
+* 更新天气api
+* 使用道具可以附带额外信息供函数使用
+* 限制帮助图片最小宽度
 
-* 支持国际疫情数据查询 [@pull/99](https://github.com/HibiKier/zhenxun_bot/pull/99)
+### 2022/11/12
 
-### 2021/12/20
+* 更新yiqing插件数据显示 [@pull/1168](https://github.com/HibiKier/zhenxun_bot/pull/1168)
 
-* 只有发布小于存储时间的新动态/视频的时候才获取并推送 [@pull/96](https://github.com/HibiKier/zhenxun_bot/pull/96)
+### 2022/11/11
 
-### 2021/12/16 \[v0.0.7.0]
+* fix: B站直播订阅的相关问题 [@pull/1158](https://github.com/HibiKier/zhenxun_bot/pull/1158)
 
-* 提供了真寻群聊功能总开关和对应默认配置项，命令：休息吧 醒来
-* 新增原神玩家查询，原神便笺查询
-* 群功能管理提供全部开启/关闭命令：开启/关闭全部功能
-* 提供主要数据自动备份，且提供自定义配置项
-* 提供命令：关于，用于介绍Bot之类的
-* 新增命令exec，用于执行sql语句
-* 签到提供参数 "all"，用于签到所有群聊
-* Ban提醒提供cd
-* 本地图库提供配置项SHOW_ID，用于设置发送图片时是否显示id
-* 色图和PIX提供配置项SHOW_INFO，用于设置发送图片时是否显示图片信息
-* 所有被动技能提供了进群默认状态配置项
-* 修复添加权限第二种添加形式无法正确添加正确的权限
-* 修复签到获取好感度卡时金币不会增加
-* 修复当红包数量不合法时依旧扣除金币
-* 修复金币红包再次使用塞红包时无法正确退回上次未开完的金币
-* 修复 滴滴滴- 只包含图片时不会发送至管理员
-* 修复添加权限等级错误
-* 修复群词条以bot名称为开头时无法正确触发
-* 修改了权限插件加载顺序防止小概率优先加载权限插件引起报错
-* 本地图库新图库会统一建立在resource/img/image_management文件夹下，如果该文件夹内未找到图库，会从上级目录查找（即：resource/img/）
+### 2022/10/30
+
+* 商店简介动态行数，根据文字长度自动换行
+
+### 2022/10/28
+
+* 为exec指令进行了SELECT语句适配,添加了查看所有表指令 [@pull/1155](https://github.com/HibiKier/zhenxun_bot/pull/1155)
+* 修复复读 [@pull/1154](https://github.com/HibiKier/zhenxun_bot/pull/1154)
+
+### 2022/10/23
+
+* 复读修改回图片下载
+
+### 2022/10/22
+
+* 更新依赖注入
+
+### 2022/10/16 \[v0.1.6.4]
+
+* 修改商店道具icon可以为空
+
+### 2022/10/15
+
+* nonebot2版本更新为rc1
+* 我的道具改为图片形式
+* 商品添加图标与是否为被动道具（被动道具无法被主动使用）
+* 商品添加使用前方法和使用后方法（类似hook），使用方法具体查看文档或签到商品文件中注册的例子
+* 新增用户使用道具，花费金币(包括插件)及用途记录
+* 更细致的金币使用依赖注入
+* 更多的依赖注入（包含图片获取等等..
+* 修复我的道具仅有被动或主动道具时图片显示错误
+* 色图插件p站反向代理失效 [@pull/1139](https://github.com/HibiKier/zhenxun_bot/pull/1139)
+
+### 2022/10/9
+
+* 修复碧蓝档案角色获取问题，换源 [@pull/1124](https://github.com/HibiKier/zhenxun_bot/pull/1124)
+
+### 2022/10/7
+
+* 修复 B 站请求返回 -401 错误 [@pull/1119](https://github.com/HibiKier/zhenxun_bot/pull/1119)
+* 关闭功能与被动时不再区分大小写，同名时仅被动关闭操作生效
+
+### 2022/9/30
+
+* 修改重置开箱的使用权限 [@pull/1118](https://github.com/HibiKier/zhenxun_bot/pull/1118)
+
+### 2022/9/27
+
+* 更新b站转发解析 [@pull/1117](https://github.com/HibiKier/zhenxun_bot/pull/1117)
+
+### 2022/9/24
+
+* 修复b站订阅 [@pull/1112](https://github.com/HibiKier/zhenxun_bot/pull/1112)
+* fix: 重载赛马娘卡池失败 [@pull/1114](https://github.com/HibiKier/zhenxun_bot/pull/1114)
+
+### 2022/9/19
+
+* 更换bilibili_sub获取用户昵称用的API&尝试修了一下get_video() [@pull/1097](https://github.com/HibiKier/zhenxun_bot/pull/1097)
+* 修复csgo每日开箱可以多开一次
+
+### 2022/9/18
+
+* 修复 bilireq 版本过低导致 B 站视频解析错误 [@pull/1090](https://github.com/HibiKier/zhenxun_bot/pull/1096)
+
+### 2022/9/16
+
+* fix: bilibili_sub, azur_draw_card [@pull/1090](https://github.com/HibiKier/zhenxun_bot/pull/1090)
+* 修复原神资源查询查询完毕后图片存储错误
+* b站订阅发送 与 b站订阅 使用相同开关，即：关闭b站订阅
+
+### 2022/9/10
+
+* 自定义群欢迎消息参数不完全时提示报错
+* 修改bt插件的url地址 [@pull/1067](https://github.com/HibiKier/zhenxun_bot/pull/1067)
+
+### 2022/9/8
+
+* 添加插件数据初始化判断
+
+### 2022/9/4
+
+* 旧词条提供图片迁移（需要重新获取old_model文件，并将数据库中user_qq为0的数据删除）
+
+### 2022/9/3
+
+* 原神玩家查询增加须弥地区 [@pull/1053](https://github.com/HibiKier/zhenxun_bot/pull/1053)
+* av号覆盖全面，且修复av号链接 [@pull/1033](https://github.com/HibiKier/zhenxun_bot/pull/1033)
+* 修复词条含有CQ回答的模糊匹配无法被解析
+* 禁言检测图片在内存中获取图片hash
+* B站订阅在群里中任意群管理员可以统一管理（原来为管理员1无法删除管理员2的订阅）
+* 修复原神资源查询地图api数据变更导致更新的地图不完全
+
+### 2022/8/27
+
+* 修复签到积分双倍后，日志记录获得积分变4倍问题 [@pull/1044](https://github.com/HibiKier/zhenxun_bot/pull/1044)
+
+### 2022/8/26
+
+* 修复群管理员无法添加词条
+* 修复词条关键词"问"前空格问题
+
+### 2022/8/23
+
+* 修了下模糊匹配 issue#1026 [@pull/1026](https://github.com/HibiKier/zhenxun_bot/pull/1026)
+
+### 2022/8/22
+
+* 修复首次安装时词条旧表出错（因为根本就没有这张表！）
+* 取消配置替换定时任务，统一存储
+* 对米游社cookie进行判断，整合米游社签到信息 [@pull/1014](https://github.com/HibiKier/zhenxun_bot/pull/1014)
+* 修正尘歌壶和质变仪图片获取地址 [@pull/1010](https://github.com/HibiKier/zhenxun_bot/pull/1010)
+* 修复词库问答 **很多** 问题[@pull/1012](https://github.com/HibiKier/zhenxun_bot/pull/1012)
+
+### 2022/8/21 \[v0.1.6.3]
+
+* 重构群词条，改为词库Plus，增加 精准|模糊|正则 问题匹配，问题与回答均支持at，image，face，超级用户额外提供 全局|私聊 词库设置，数据迁移目前只提供了问题和回答都是纯文本的词条
+* 修复b站转发解析av号无法解析
+* B站订阅直播订阅支持短号
+* 开箱提供重置开箱命令，重置今日所有开箱数据（重置次数，并不会删除今日已开箱记录）
+* 提供全局字典GDict，通过from utils.utils import GDict导入
+* 适配omega 13w张图的数据结构表（建议删表重导）
+* 除首次启动外将配置替换加入单次定时任务，加快启动速度
+* fix: WordBank.check() [@pull/1008](https://github.com/HibiKier/zhenxun_bot/pull/1008)
+* 改进插件 `我有一个朋友`，避免触发过于频繁 [@pull/1001](https://github.com/HibiKier/zhenxun_bot/pull/1001)
+* 原神便笺新增洞天宝钱和参量质变仪提示 [@pull/1005](https://github.com/HibiKier/zhenxun_bot/pull/1005)
+* 新增米游社签到功能，自动领取（白嫖）米游币 [@pull/991](https://github.com/HibiKier/zhenxun_bot/pull/991)
+
+### 2022/8/14
+
+* 修复epic未获取到时间时出错
+* 修复订阅主播时动态获取的id是直播间id
+
+### 2022/8/8
+
+* 修复赛马娘重载卡池失败的问题 [@pull/969](https://github.com/HibiKier/zhenxun_bot/pull/969)
+
+### 2022/8/3
+
+* 修复 bili动态链接在投稿视频时URL和分割线连在一起 [@pull/951](https://github.com/HibiKier/zhenxun_bot/pull/961)
+* 更新 Epic 免费游戏商城链接拼接规则 [@pull/957](https://github.com/HibiKier/zhenxun_bot/pull/957)
+
+### 2022/8/6
+
+* 修复了原神自动签到返回invalid request的问题，新增查看我的cookie命令 [@pull/971](https://github.com/HibiKier/zhenxun_bot/pull/971)
 
 <br>
 
-__..... 更多更新信息请查看文档__
-
+**..... 更多更新信息请查看文档**
 
 ## Todo
-- [ ] web管理
+
+* [x] web管理
 
 ## 感谢
+
 [botuniverse / onebot](https://github.com/botuniverse/onebot) ：超棒的机器人协议  
 [Mrs4s / go-cqhttp](https://github.com/Mrs4s/go-cqhttp) ：cqhttp的golang实现，轻量、原生跨平台.  
 [nonebot / nonebot2](https://github.com/nonebot/nonebot2) ：跨平台Python异步机器人框架  

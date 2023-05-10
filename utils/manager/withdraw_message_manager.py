@@ -1,5 +1,10 @@
-from typing import Tuple, Union, Dict
-from nonebot.adapters.onebot.v11 import MessageEvent, PrivateMessageEvent, GroupMessageEvent
+from typing import Dict, Optional, Tuple, Union
+
+from nonebot.adapters.onebot.v11 import (
+    GroupMessageEvent,
+    MessageEvent,
+    PrivateMessageEvent,
+)
 
 
 class WithdrawMessageManager:
@@ -8,9 +13,9 @@ class WithdrawMessageManager:
 
     def append(self, message_data: Tuple[Union[int, Dict[str, int]], int]):
         """
-        说明：
+        说明:
             添加一个撤回消息id和时间
-        参数：
+        参数:
             :param message_data: 撤回消息id和时间
         """
         if isinstance(message_data[0], dict):
@@ -19,15 +24,18 @@ class WithdrawMessageManager:
 
     def remove(self, message_data: Tuple[int, int]):
         """
-        说明：
+        说明:
             删除一个数据
-        参数：
+        参数:
             :param message_data: 消息id和时间
         """
         self.data.remove(message_data)
 
     def withdraw_message(
-        self, event: MessageEvent, id_: Union[int, Dict[str, int]], conditions: Tuple[int, int]
+        self,
+        event: MessageEvent,
+        id_: Union[int, Dict[str, int]],
+        conditions: Optional[Tuple[int, int]],
     ):
         """
         便捷判断消息撤回
@@ -35,7 +43,7 @@ class WithdrawMessageManager:
         :param id_: 消息id 或 send 返回的字典
         :param conditions: 判断条件
         """
-        if conditions[0]:
+        if conditions and conditions[0]:
             if (
                 (conditions[1] == 0 and isinstance(event, PrivateMessageEvent))
                 or (conditions[1] == 1 and isinstance(event, GroupMessageEvent))

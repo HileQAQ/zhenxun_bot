@@ -1,23 +1,71 @@
-from datetime import datetime
+import time
 from collections import defaultdict
-from nonebot import require
-from configs.config import SYSTEM_PROXY, Config
-from typing import List, Union, Optional, Type, Any
-from nonebot.adapters.onebot.v11 import Bot, Message
-from nonebot.matcher import matchers, Matcher
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Callable, List, Optional, Set, Type, Union
+
 import httpx
 import nonebot
-import pytz
 import pypinyin
-import time
+import pytz
+from nonebot import require
+from nonebot.adapters import Bot
+from nonebot.adapters.onebot.v11 import Message, MessageSegment
+from nonebot.matcher import Matcher, matchers
+
+from configs.config import SYSTEM_PROXY, Config
+from services.log import logger
 
 try:
     import ujson as json
 except ModuleNotFoundError:
     import json
 
+require("nonebot_plugin_apscheduler")
+from nonebot_plugin_apscheduler import scheduler
 
-scheduler = require("nonebot_plugin_apscheduler").scheduler
+scheduler = scheduler
+
+# 全局字典
+GDict = {
+    "run_sql": [],  # 需要启动前运行的sql语句
+    "_shop_before_handle": {},  # 商品使用前函数
+    "_shop_after_handle": {},  # 商品使用后函数
+}
+
+
+CN2NUM = {
+    "一": 1,
+    "二": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
+    "十": 10,
+    "十一": 11,
+    "十二": 12,
+    "十三": 13,
+    "十四": 14,
+    "十五": 15,
+    "十六": 16,
+    "十七": 17,
+    "十八": 18,
+    "十九": 19,
+    "二十": 20,
+    "二十一": 21,
+    "二十二": 22,
+    "二十三": 23,
+    "二十四": 24,
+    "二十五": 25,
+    "二十六": 26,
+    "二十七": 27,
+    "二十八": 28,
+    "二十九": 29,
+    "三十": 30,
+}
 
 
 class CountLimiter:
@@ -146,13 +194,15 @@ class DailyNumberLimiter:
         self.count[key] = 0
 
 
-def is_number(s: str) -> bool:
+def is_number(s: Union[int, str]) -> bool:
     """
-    说明：
+    说明:
         检测 s 是否为数字
-    参数：
+    参数:
         :param s: 文本
     """
+    if isinstance(s, int):
+        return True
     try:
         float(s)
         return True
@@ -168,41 +218,49 @@ def is_number(s: str) -> bool:
     return False
 
 
-def get_bot() -> Optional[Bot]:
+def get_bot(id_: Optional[str] = None) -> Optional[Bot]:
     """
-    说明：
+    说明:
         获取 bot 对象
     """
     try:
-        return list(nonebot.get_bots().values())[0]
-    except IndexError:
+        return nonebot.get_bot(id_)
+    except ValueError:
         return None
 
 
-def get_matchers() -> List[Type[Matcher]]:
+def get_matchers(distinct: bool = False) -> List[Type[Matcher]]:
     """
-    获取所有插件
+    说明:
+        获取所有matcher
+    参数:
+        distinct: 去重
     """
     _matchers = []
+    temp = []
     for i in matchers.keys():
         for matcher in matchers[i]:
+            if distinct and matcher.plugin_name in temp:
+                continue
+            temp.append(matcher.plugin_name)
             _matchers.append(matcher)
     return _matchers
 
 
 def get_message_at(data: Union[str, Message]) -> List[int]:
     """
-    说明：
+    说明:
         获取消息中所有的 at 对象的 qq
-    参数：
-        :param data: event.json()
+    参数:
+        :param data: event.json(), event.message
     """
     qq_list = []
     if isinstance(data, str):
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "at":
-                qq_list.append(int(msg["data"]["qq"]))
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg and msg.get("type") == "at":
+                    qq_list.append(int(msg["data"]["qq"]))
     else:
         for seg in data:
             if seg.type == "at":
@@ -212,36 +270,58 @@ def get_message_at(data: Union[str, Message]) -> List[int]:
 
 def get_message_img(data: Union[str, Message]) -> List[str]:
     """
-    说明：
+    说明:
         获取消息中所有的 图片 的链接
-    参数：
+    参数:
         :param data: event.json()
     """
     img_list = []
     if isinstance(data, str):
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "image":
-                img_list.append(msg["data"]["url"])
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg["type"] == "image":
+                    img_list.append(msg["data"]["url"])
     else:
         for seg in data["image"]:
             img_list.append(seg.data["url"])
     return img_list
 
 
+def get_message_face(data: Union[str, Message]) -> List[str]:
+    """
+    说明:
+        获取消息中所有的 face Id
+    参数:
+        :param data: event.json()
+    """
+    face_list = []
+    if isinstance(data, str):
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg["type"] == "face":
+                    face_list.append(msg["data"]["id"])
+    else:
+        for seg in data["face"]:
+            face_list.append(seg.data["id"])
+    return face_list
+
+
 def get_message_img_file(data: Union[str, Message]) -> List[str]:
     """
-    说明：
+    说明:
         获取消息中所有的 图片file
-    参数：
+    参数:
         :param data: event.json()
     """
     file_list = []
     if isinstance(data, str):
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "image":
-                file_list.append(msg["data"]["file"])
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg["type"] == "image":
+                    file_list.append(msg["data"]["file"])
     else:
         for seg in data["image"]:
             file_list.append(seg.data["file"])
@@ -250,37 +330,41 @@ def get_message_img_file(data: Union[str, Message]) -> List[str]:
 
 def get_message_text(data: Union[str, Message]) -> str:
     """
-    说明：
+    说明:
         获取消息中 纯文本 的信息
-    参数：
+    参数:
         :param data: event.json()
     """
     result = ""
     if isinstance(data, str):
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "text":
-                result += msg["data"]["text"].strip() + " "
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            if isinstance(message, str):
+                return message.strip()
+            for msg in message:
+                if msg["type"] == "text":
+                    result += msg["data"]["text"].strip() + " "
         return result.strip()
     else:
         for seg in data["text"]:
             result += seg.data["text"] + " "
-    return result
+    return result.strip()
 
 
 def get_message_record(data: Union[str, Message]) -> List[str]:
     """
-    说明：
+    说明:
         获取消息中所有 语音 的链接
-    参数：
+    参数:
         :param data: event.json()
     """
     record_list = []
     if isinstance(data, str):
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "record":
-                record_list.append(msg["data"]["url"])
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg["type"] == "record":
+                    record_list.append(msg["data"]["url"])
     else:
         for seg in data["record"]:
             record_list.append(seg.data["url"])
@@ -289,35 +373,36 @@ def get_message_record(data: Union[str, Message]) -> List[str]:
 
 def get_message_json(data: str) -> List[dict]:
     """
-    说明：
+    说明:
         获取消息中所有 json
-    参数：
+    参数:
         :param data: event.json()
     """
     try:
         json_list = []
-        data = json.loads(data)
-        for msg in data["message"]:
-            if msg["type"] == "json":
-                json_list.append(msg["data"])
+        event = json.loads(data)
+        if data and (message := event.get("message")):
+            for msg in message:
+                if msg["type"] == "json":
+                    json_list.append(msg["data"])
         return json_list
     except KeyError:
         return []
 
 
-def get_local_proxy():
+def get_local_proxy() -> Optional[str]:
     """
-    说明：
+    说明:
         获取 config.py 中设置的代理
     """
-    return SYSTEM_PROXY if SYSTEM_PROXY else None
+    return SYSTEM_PROXY or None
 
 
 def is_chinese(word: str) -> bool:
     """
-    说明：
+    说明:
         判断字符串是否为纯中文
-    参数：
+    参数:
         :param word: 文本
     """
     for ch in word:
@@ -328,9 +413,9 @@ def is_chinese(word: str) -> bool:
 
 async def get_user_avatar(qq: int) -> Optional[bytes]:
     """
-    说明：
+    说明:
         快捷获取用户头像
-    参数：
+    参数:
         :param qq: qq号
     """
     url = f"http://q1.qlogo.cn/g?b=qq&nk={qq}&s=160"
@@ -345,9 +430,9 @@ async def get_user_avatar(qq: int) -> Optional[bytes]:
 
 async def get_group_avatar(group_id: int) -> Optional[bytes]:
     """
-    说明：
+    说明:
         快捷获取用群头像
-    参数：
+    参数:
         :param group_id: 群号
     """
     url = f"http://p.qlogo.cn/gh/{group_id}/{group_id}/640/"
@@ -362,9 +447,9 @@ async def get_group_avatar(group_id: int) -> Optional[bytes]:
 
 def cn2py(word: str) -> str:
     """
-    说明：
+    说明:
         将字符串转化为拼音
-    参数：
+    参数:
         :param word: 文本
     """
     temp = ""
@@ -377,9 +462,9 @@ def change_pixiv_image_links(
     url: str, size: Optional[str] = None, nginx_url: Optional[str] = None
 ):
     """
-    说明：
+    说明:
         根据配置改变图片大小和反代链接
-    参数：
+    参数:
         :param url: 图片原图链接
         :param size: 模式
         :param nginx_url: 反代
@@ -398,3 +483,147 @@ def change_pixiv_image_links(
             .replace("_webp", "")
         )
     return url
+
+
+def change_img_md5(path_file: Union[str, Path]) -> bool:
+    """
+    说明:
+        改变图片MD5
+    参数:
+    :param path_file: 图片路径
+    """
+    try:
+        with open(path_file, "a") as f:
+            f.write(str(int(time.time() * 1000)))
+        return True
+    except Exception as e:
+        logger.warning(f"改变图片MD5错误 Path：{path_file}", e=e)
+    return False
+
+
+async def broadcast_group(
+    message: Union[str, Message, MessageSegment],
+    bot: Optional[Union[Bot, List[Bot]]] = None,
+    bot_id: Optional[Union[str, Set[str]]] = None,
+    ignore_group: Optional[Set[int]] = None,
+    check_func: Optional[Callable[[int], bool]] = None,
+    log_cmd: Optional[str] = None,
+):
+    """获取所有Bot或指定Bot对象广播群聊
+
+    Args:
+        message (Any): 广播消息内容
+        bot (Optional[Bot], optional): 指定bot对象. Defaults to None.
+        bot_id (Optional[str], optional): 指定bot id. Defaults to None.
+        ignore_group (Optional[List[int]], optional): 忽略群聊列表. Defaults to None.
+        check_func (Optional[Callable[[int], bool]], optional): 发送前对群聊检测方法，判断是否发送. Defaults to None.
+        log_cmd (Optional[str], optional): 日志标记. Defaults to None.
+    """
+    if not message:
+        raise ValueError("群聊广播消息不能为空")
+    bot_dict = nonebot.get_bots()
+    bot_list: List[Bot] = []
+    if bot:
+        if isinstance(bot, list):
+            bot_list = bot
+        else:
+            bot_list.append(bot)
+    elif bot_id:
+        _bot_id_list = bot_id
+        if isinstance(bot_id, str):
+            _bot_id_list = [bot_id]
+        for id_ in _bot_id_list:
+            if bot_id in bot_dict:
+                bot_list.append(bot_dict[bot_id])
+            else:
+                logger.warning(f"Bot:{id_} 对象未连接或不存在")
+    else:
+        bot_list = list(bot_dict.values())
+    _used_group = []
+    for _bot in bot_list:
+        try:
+            if _group_list := await _bot.get_group_list():
+                group_id_list = [g["group_id"] for g in _group_list]
+                for group_id in set(group_id_list):
+                    try:
+                        if (
+                            ignore_group and group_id in ignore_group
+                        ) or group_id in _used_group:
+                            continue
+                        if check_func and not check_func(group_id):
+                            continue
+                        _used_group.append(group_id)
+                        await _bot.send_group_msg(group_id=group_id, message=message)
+                    except Exception as e:
+                        logger.error(
+                            f"广播群发消息失败: {message}",
+                            command=log_cmd,
+                            group_id=group_id,
+                            e=e,
+                        )
+        except Exception as e:
+            logger.error(f"Bot: {_bot.self_id} 获取群聊列表失败", command=log_cmd, e=e)
+
+
+async def broadcast_superuser(
+    message: Union[str, Message, MessageSegment],
+    bot: Optional[Union[Bot, List[Bot]]] = None,
+    bot_id: Optional[Union[str, Set[str]]] = None,
+    ignore_superuser: Optional[Set[int]] = None,
+    check_func: Optional[Callable[[int], bool]] = None,
+    log_cmd: Optional[str] = None,
+):
+    """获取所有Bot或指定Bot对象广播超级用户
+
+    Args:
+        message (Any): 广播消息内容
+        bot (Optional[Bot], optional): 指定bot对象. Defaults to None.
+        bot_id (Optional[str], optional): 指定bot id. Defaults to None.
+        ignore_superuser (Optional[List[int]], optional): 忽略的超级用户id. Defaults to None.
+        check_func (Optional[Callable[[int], bool]], optional): 发送前对群聊检测方法，判断是否发送. Defaults to None.
+        log_cmd (Optional[str], optional): 日志标记. Defaults to None.
+    """
+    if not message:
+        raise ValueError("超级用户广播消息不能为空")
+    bot_dict = nonebot.get_bots()
+    bot_list: List[Bot] = []
+    if bot:
+        if isinstance(bot, list):
+            bot_list = bot
+        else:
+            bot_list.append(bot)
+    elif bot_id:
+        _bot_id_list = bot_id
+        if isinstance(bot_id, str):
+            _bot_id_list = [bot_id]
+        for id_ in _bot_id_list:
+            if bot_id in bot_dict:
+                bot_list.append(bot_dict[bot_id])
+            else:
+                logger.warning(f"Bot:{id_} 对象未连接或不存在")
+    else:
+        bot_list = list(bot_dict.values())
+    _used_user = []
+    for _bot in bot_list:
+        try:
+            for user_id in _bot.config.superusers:
+                try:
+                    if (
+                        ignore_superuser and int(user_id) in ignore_superuser
+                    ) or user_id in _used_user:
+                        continue
+                    if check_func and not check_func(int(user_id)):
+                        continue
+                    _used_user.append(user_id)
+                    await _bot.send_private_message(
+                        user_id=int(user_id), message=message
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"广播超级用户发消息失败: {message}",
+                        command=log_cmd,
+                        user_id=user_id,
+                        e=e,
+                    )
+        except Exception as e:
+            logger.error(f"Bot: {_bot.self_id} 获取群聊列表失败", command=log_cmd, e=e)

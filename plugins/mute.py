@@ -1,16 +1,20 @@
-from nonebot import on_message, on_command
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
-from nonebot.adapters.onebot.v11.permission import GROUP
-from utils.utils import is_number, get_message_img, get_message_text
-from nonebot.adapters.onebot.v11.exception import ActionFailed
-from configs.path_config import DATA_PATH, TEMP_PATH
-from utils.image_utils import get_img_hash
-from services.log import logger
-from configs.config import NICKNAME, Config
-from utils.http_utils import AsyncHttpx
-from nonebot.params import CommandArg, Command
-from typing import Tuple, Dict, Any
 import time
+from io import BytesIO
+from typing import Any, Dict, Tuple
+
+import imagehash
+from nonebot import on_command, on_message
+from nonebot.adapters.onebot.v11 import ActionFailed, Bot, GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11.permission import GROUP
+from nonebot.params import Command, CommandArg
+from PIL import Image
+
+from configs.config import NICKNAME, Config
+from configs.path_config import DATA_PATH, TEMP_PATH
+from services.log import logger
+from utils.http_utils import AsyncHttpx
+from utils.image_utils import get_img_hash
+from utils.utils import get_message_img, get_message_text, is_number
 
 try:
     import ujson as json
@@ -35,13 +39,29 @@ __plugin_version__ = 0.1
 __plugin_author__ = "HibiKier"
 __plugin_settings__ = {"admin_level": Config.get_config("mute", "MUTE_LEVEL")}
 __plugin_configs__ = {
-    "MUTE_LEVEL [LEVEL]": {"value": 5, "help": "更改禁言设置的管理权限", "default_value": 5},
-    "MUTE_DEFAULT_COUNT": {"value": 10, "help": "刷屏禁言默认检测次数", "default_value": 10},
-    "MUTE_DEFAULT_TIME": {"value": 7, "help": "刷屏检测默认规定时间", "default_value": 7},
+    "MUTE_LEVEL [LEVEL]": {
+        "value": 5,
+        "help": "更改禁言设置的管理权限",
+        "default_value": 5,
+        "type": int,
+    },
+    "MUTE_DEFAULT_COUNT": {
+        "value": 10,
+        "help": "刷屏禁言默认检测次数",
+        "default_value": 10,
+        "type": int,
+    },
+    "MUTE_DEFAULT_TIME": {
+        "value": 7,
+        "help": "刷屏检测默认规定时间",
+        "default_value": 7,
+        "type": int,
+    },
     "MUTE_DEFAULT_DURATION": {
         "value": 10,
         "help": "刷屏检测默禁言时长（分钟）",
         "default_value": 10,
+        "type": int,
     },
 }
 
@@ -71,12 +91,10 @@ def save_data():
         json.dump(mute_data, f, indent=4)
 
 
-async def download_img_and_hash(url, group_id) -> str:
-    if await AsyncHttpx.download_file(
-        url, TEMP_PATH / f"mute_{group_id}_img.jpg"
-    ):
-        return str(get_img_hash(TEMP_PATH / f"mute_{group_id}_img.jpg"))
-    return ""
+async def download_img_and_hash(url) -> str:
+    return str(
+        imagehash.average_hash(Image.open(BytesIO((await AsyncHttpx.get(url)).content)))
+    )
 
 
 mute_dict = {}
@@ -90,7 +108,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     img_list = get_message_img(event.json())
     img_hash = ""
     for img in img_list:
-        img_hash += await download_img_and_hash(img, event.group_id)
+        img_hash += await download_img_and_hash(img)
     msg += img_hash
     if not mute_data.get(group_id):
         mute_data[group_id] = {
@@ -133,11 +151,19 @@ async def _(bot: Bot, event: GroupMessageEvent):
 
 
 @mute_setting.handle()
-async def _(event: GroupMessageEvent, cmd: Tuple[str, ...] = Command(), arg: Message = CommandArg()):
+async def _(
+    event: GroupMessageEvent,
+    cmd: Tuple[str, ...] = Command(),
+    arg: Message = CommandArg(),
+):
     global mute_data
     group_id = str(event.group_id)
     if not mute_data.get(group_id):
-        mute_data[group_id] = {"count": Config.get_config("mute", "MUTE_DEFAULT_COUNT"), "time": Config.get_config("mute", "MUTE_DEFAULT_TIME"), "duration": Config.get_config("mute", "MUTE_DEFAULT_DURATION")}
+        mute_data[group_id] = {
+            "count": Config.get_config("mute", "MUTE_DEFAULT_COUNT"),
+            "time": Config.get_config("mute", "MUTE_DEFAULT_TIME"),
+            "duration": Config.get_config("mute", "MUTE_DEFAULT_DURATION"),
+        }
     msg = arg.extract_plain_text().strip()
     if cmd[0] == "刷屏检测设置":
         await mute_setting.finish(
@@ -157,8 +183,6 @@ async def _(event: GroupMessageEvent, cmd: Tuple[str, ...] = Command(), arg: Mes
     if cmd[0] == "设置刷屏禁言时长":
         mute_data[group_id]["duration"] = int(msg)
         msg += " 分钟"
-    await mute_setting.send(f'刷屏检测：{cmd[0]}为 {msg}')
-    logger.info(
-        f'USER {event.user_id} GROUP {group_id} {cmd[0]}：{msg}'
-    )
+    await mute_setting.send(f"刷屏检测：{cmd[0]}为 {msg}")
+    logger.info(f"USER {event.user_id} GROUP {group_id} {cmd[0]}：{msg}")
     save_data()

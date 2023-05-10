@@ -1,11 +1,13 @@
 from nonebot import on_regex
-from services.log import logger
-from nonebot.adapters.onebot.v11 import Bot, MessageEvent, GroupMessageEvent
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, MessageEvent
 from nonebot.typing import T_State
-from utils.utils import scheduler, get_bot
-from .data_source import get_epic_free
-from utils.manager import group_manager
+
 from configs.config import Config
+from services.log import logger
+from utils.manager import group_manager
+from utils.utils import get_bot, scheduler
+
+from .data_source import get_epic_free
 
 __zx_plugin_name__ = "epic免费游戏"
 __plugin_usage__ = """
@@ -31,6 +33,7 @@ Config.add_plugin_config(
     True,
     help_="被动 epic免费游戏 进群默认开关状态",
     default_value=True,
+    type=bool,
 )
 
 epic = on_regex("^epic$", priority=5, block=True)
@@ -67,7 +70,7 @@ async def _():
     gl = [g["group_id"] for g in gl]
     msg_list, code = await get_epic_free(bot, "Group")
     for g in gl:
-        if await group_manager.check_group_task_status(g, "epic_free_game"):
+        if group_manager.check_task_status("epic_free_game", g):
             try:
                 if msg_list and code == 200:
                     await bot.send_group_forward_msg(group_id=g, messages=msg_list)

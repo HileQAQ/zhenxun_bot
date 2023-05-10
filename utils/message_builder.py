@@ -1,87 +1,84 @@
+import io
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
+
+from nonebot.adapters.onebot.v11.message import Message, MessageSegment
 
 from configs.config import NICKNAME
 from configs.path_config import IMAGE_PATH, RECORD_PATH
-from nonebot.adapters.onebot.v11.message import MessageSegment, Message
 from services.log import logger
+from utils.image_utils import BuildImage
 
 
 def image(
-        file: Union[str, Path, bytes] = None,
-        path: str = None,
-        b64: str = None,
-) -> Union[MessageSegment, str]:
+    file: Optional[Union[str, Path, bytes, BuildImage, io.BytesIO]] = None,
+    b64: Optional[str] = None,
+) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.image 消息
         生成顺序：绝对路径(abspath) > base64(b64) > img_name
-    参数：
-        :param file: 图片文件名称，默认在 resource/img 目录下
-        :param path: 图片所在路径，默认在 resource/img 目录下
-        :param b64: 图片base64
+    参数:
+        :param file: 图片文件
+        :param b64: 图片base64（兼容旧方法）
     """
+    if b64:
+        file = b64 if b64.startswith("base64://") else ("base64://" + b64)
+    if isinstance(file, str):
+        if file.startswith(("http", "base64://")):
+            return MessageSegment.image(file)
+        else:
+            if (IMAGE_PATH / file).exists():
+                return MessageSegment.image(IMAGE_PATH / file)
+            logger.warning(f"图片 {(IMAGE_PATH / file).absolute()}缺失...")
+            return ""
     if isinstance(file, Path):
         if file.exists():
             return MessageSegment.image(file)
         logger.warning(f"图片 {file.absolute()}缺失...")
-        return ""
-    elif isinstance(file, bytes):
+    if isinstance(file, (bytes, io.BytesIO)):
         return MessageSegment.image(file)
-    elif b64:
-        return MessageSegment.image(b64 if "base64://" in b64 else "base64://" + b64)
-    else:
-        if file.startswith("http"):
-            return MessageSegment.image(file)
-        if len(file.split(".")) == 1:
-            file += ".jpg"
-        if (file := IMAGE_PATH / path / file if path else IMAGE_PATH / file).exists():
-            return MessageSegment.image(file)
-        else:
-            logger.warning(f"图片 {file} 缺失...")
-            return ""
+    if isinstance(file, BuildImage):
+        return MessageSegment.image(file.pic2bs4())
+    return MessageSegment.image("")
 
 
-def at(qq: int) -> MessageSegment:
+def at(qq: Union[int, str]) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.at 消息
-    参数：
+    参数:
         :param qq: qq号
     """
     return MessageSegment.at(qq)
 
 
-def record(voice_name: str, path: str = None) -> MessageSegment or str:
+def record(file: Union[Path, str, bytes, io.BytesIO]) -> Union[MessageSegment, str]:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.record 消息
-    参数：
-        :param voice_name: 音频文件名称，默认在 resource/voice 目录下
-        :param path: 音频文件路径，默认在 resource/voice 目录下
+    参数:
+        :param file: 音频文件名称，默认在 resource/voice 目录下
     """
-    if len(voice_name.split(".")) == 1:
-        voice_name += ".mp3"
-    file = (
-        Path(RECORD_PATH) / path / voice_name
-        if path
-        else Path(RECORD_PATH) / voice_name
-    )
-    if "http" in voice_name:
-        return MessageSegment.record(voice_name)
-    if file.exists():
-        result = MessageSegment.record(f"file:///{file.absolute()}")
-        return result
-    else:
-        logger.warning(f"语音{file.absolute()}缺失...")
-        return ""
+    if isinstance(file, Path):
+        if file.exists():
+            return MessageSegment.record(file)
+        logger.warning(f"音频 {file.absolute()}缺失...")
+    if isinstance(file, (bytes, io.BytesIO)):
+        return MessageSegment.record(file)
+    if isinstance(file, str):
+        if "http" in file:
+            return MessageSegment.record(file)
+        else:
+            return MessageSegment.record(RECORD_PATH / file)
+    return ""
 
 
 def text(msg: str) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.text 消息
-    参数：
+    参数:
         :param msg: 消息文本
     """
     return MessageSegment.text(msg)
@@ -89,21 +86,21 @@ def text(msg: str) -> MessageSegment:
 
 def contact_user(qq: int) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.contact_user 消息
-    参数：
+    参数:
         :param qq: qq号
     """
     return MessageSegment.contact_user(qq)
 
 
 def share(
-        url: str, title: str, content: str = None, image_url: str = None
+    url: str, title: str, content: Optional[str] = None, image_url: Optional[str] = None
 ) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.share 消息
-    参数：
+    参数:
         :param url: 自定义分享的链接
         :param title: 自定义分享的包体
         :param content: 自定义分享的内容
@@ -114,9 +111,9 @@ def share(
 
 def xml(data: str) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.xml 消息
-    参数：
+    参数:
         :param data: 数据文本
     """
     return MessageSegment.xml(data)
@@ -124,9 +121,9 @@ def xml(data: str) -> MessageSegment:
 
 def json(data: str) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.json 消息
-    参数：
+    参数:
         :param data: 消息数据
     """
     return MessageSegment.json(data)
@@ -134,9 +131,9 @@ def json(data: str) -> MessageSegment:
 
 def face(id_: int) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.face 消息
-    参数：
+    参数:
         :param id_: 表情id
     """
     return MessageSegment.face(id_)
@@ -144,9 +141,9 @@ def face(id_: int) -> MessageSegment:
 
 def poke(qq: int) -> MessageSegment:
     """
-    说明：
+    说明:
         生成一个 MessageSegment.poke 消息
-    参数：
+    参数:
         :param qq: qq号
     """
     return MessageSegment("poke", {"qq": qq})
@@ -157,13 +154,17 @@ def music(type_: str, id_: int) -> MessageSegment:
 
 
 def custom_forward_msg(
-        msg_list: List[str], uin: Union[int, str], name: str = f"这里是{NICKNAME}"
+    msg_list: List[Union[str, Message]],
+    uin: Union[int, str],
+    name: str = f"这里是{NICKNAME}",
 ) -> List[dict]:
     """
-    生成自定义合并消息
-    :param msg_list: 消息列表
-    :param uin: 发送者 QQ
-    :param name: 自定义名称
+    说明:
+        生成自定义合并消息
+    参数:
+        :param msg_list: 消息列表
+        :param uin: 发送者 QQ
+        :param name: 自定义名称
     """
     uin = int(uin)
     mes_list = []
@@ -199,11 +200,10 @@ class MessageBuilder:
 
     def image(
         self,
-        file: Union[str, Path, bytes] = None,
-        path: str = None,
-        b64: str = None,
+        file: Optional[Union[str, Path, bytes]] = None,
+        b64: Optional[str] = None,
     ):
-        return MessageBuilder(self._msg + image(file, path, b64))
+        return MessageBuilder(self._msg + image(file, b64))
 
     def at(self, qq: int):
         return MessageBuilder(self._msg + at(qq))

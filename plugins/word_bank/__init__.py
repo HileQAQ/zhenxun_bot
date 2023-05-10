@@ -1,5 +1,9 @@
-from configs.config import Config
+from pathlib import Path
+
 import nonebot
+
+from configs.config import Config
+from utils.utils import GDict
 
 Config.add_plugin_config(
     "word_bank",
@@ -7,28 +11,10 @@ Config.add_plugin_config(
     5,
     name="词库问答",
     help_="设置增删词库的权限等级",
-    default_value=5
+    default_value=5,
+    type=int,
 )
 
-Config.add_plugin_config(
-    "word_bank",
-    "WORD_BANK_FUZZY",
-    False,
-    help_="模糊匹配",
-    default_value=False
-)
-Config.add_plugin_config(
-    "word_bank",
-    "WORD_BANK_KEY",
-    True,
-    help_="关键字匹配",
-    default_value=True
-)
-Config.add_plugin_config(
-    "word_bank",
-    "WORD_BANK_MIX",
-    25,
-    help_="查看词条时图片内最多显示条数",
-    default_value=25
-)
-nonebot.load_plugins("plugins/word_bank")
+GDict["run_sql"].append("ALTER TABLE word_bank2 ADD to_me VARCHAR(255);")
+
+nonebot.load_plugins(str(Path(__file__).parent.resolve()))

@@ -1,57 +1,119 @@
+import time
+from hashlib import md5
+from typing import Any, Tuple
+
+from nonebot.internal.matcher import Matcher
+from nonebot.internal.params import Depends
+from nonebot.params import RegexGroup
+from nonebot.typing import T_State
+
+from configs.config import Config
 from utils.http_utils import AsyncHttpx
 
-url = f"http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=null"
+URL = "http://api.fanyi.baidu.com/api/trans/vip/translate"
 
 
-async def translate_msg(language_type, msg):
-    data = {
-        "type": parse_language(language_type),
-        "i": msg,
-        "doctype": "json",
-        "version": "2.1",
-        "keyfrom": "fanyi.web",
-        "ue": "UTF-8",
-        "action": "FY_BY_CLICKBUTTON",
-        "typoResult": "true",
+language = {
+    "自动": "auto",
+    "粤语": "yue",
+    "韩语": "kor",
+    "泰语": "th",
+    "葡萄牙语": "pt",
+    "希腊语": "el",
+    "保加利亚语": "bul",
+    "芬兰语": "fin",
+    "斯洛文尼亚语": "slo",
+    "繁体中文": "cht",
+    "中文": "zh",
+    "文言文": "wyw",
+    "法语": "fra",
+    "阿拉伯语": "ara",
+    "德语": "de",
+    "荷兰语": "nl",
+    "爱沙尼亚语": "est",
+    "捷克语": "cs",
+    "瑞典语": "swe",
+    "越南语": "vie",
+    "英语": "en",
+    "日语": "jp",
+    "西班牙语": "spa",
+    "俄语": "ru",
+    "意大利语": "it",
+    "波兰语": "pl",
+    "丹麦语": "dan",
+    "罗马尼亚语": "rom",
+    "匈牙利语": "hu",
+}
+
+
+def CheckParam():
+    """
+    检查翻译内容是否在language中
+    """
+
+    async def dependency(
+        matcher: Matcher,
+        state: T_State,
+        reg_group: Tuple[Any, ...] = RegexGroup(),
+    ):
+        form, to, _ = reg_group
+        values = language.values()
+        if form:
+            form = form.split(":")[-1]
+            if form not in language and form not in values:
+                await matcher.finish("FORM选择的语种不存在")
+            state["form"] = form
+        else:
+            state["form"] = "auto"
+        if to:
+            to = to.split(":")[-1]
+            if to not in language and to not in values:
+                await matcher.finish("TO选择的语种不存在")
+            state["to"] = to
+        else:
+            state["to"] = "auto"
+
+    return Depends(dependency)
+
+
+async def translate_msg(word: str, form: str, to: str) -> str:
+    """翻译
+
+    Args:
+        word (str): 翻译文字
+        form (str): 源语言
+        to (str): 目标语言
+
+    Returns:
+        str: 翻译后的文字
+    """
+    if form in language:
+        form = language[form]
+    if to in language:
+        to = language[to]
+    salt = str(time.time())
+    app_id = Config.get_config("translate", "APPID")
+    secret_key = Config.get_config("translate", "SECRET_KEY")
+    sign = app_id + word + salt + secret_key  # type: ignore
+    md5_ = md5()
+    md5_.update(sign.encode("utf-8"))
+    sign = md5_.hexdigest()
+    params = {
+        "q": word,
+        "from": form,
+        "to": to,
+        "appid": app_id,
+        "salt": salt,
+        "sign": sign,
     }
-    data = (await AsyncHttpx.post(url, data=data)).json()
-    if data["errorCode"] == 0:
-        return f'原文：{msg}\n翻译：{data["translateResult"][0][0]["tgt"]}'
-    return "翻译惜败.."
-
-
-# ZH_CN2EN 中文　»　英语
-# ZH_CN2JA 中文　»　日语
-# ZH_CN2KR 中文　»　韩语
-# ZH_CN2FR 中文　»　法语
-# ZH_CN2RU 中文　»　俄语
-# ZH_CN2SP 中文　»　西语
-# EN2ZH_CN 英语　»　中文
-# JA2ZH_CN 日语　»　中文
-# KR2ZH_CN 韩语　»　中文
-# FR2ZH_CN 法语　»　中文
-# RU2ZH_CN 俄语　»　中文
-# SP2ZH_CN 西语　»　中文
-
-
-def parse_language(language_type):
-    if language_type == "英翻":
-        return "EN2ZH_CN"
-    if language_type == "日翻":
-        return "JA2ZH_CN"
-    if language_type == "韩翻":
-        return "KR2ZH_CN"
-    # if language_type == '法翻':
-    #     return 'FR2ZH_CN'
-    # if language_type == '俄翻':
-    #     return 'RU2ZH_CN'
-    if language_type == "翻英":
-        return "ZH_CN2EN"
-    if language_type == "翻日":
-        return "ZH_CN2JA"
-    if language_type == "翻韩":
-        return "ZH_CN2KR"
-    # if language_type == '翻法':
-    #     return 'ZH_CN2FR'
-    # if language_type == '翻俄':
-    #     return 'ZH_CN2RU'
+    url = URL + "?"
+    for key, value in params.items():
+        url += f"{key}={value}&"
+    url = url[:-1]
+    resp = await AsyncHttpx.get(url)
+    data = resp.json()
+    if data.get("error_code"):
+        return data.get("error_msg")
+    if trans_result := data.get("trans_result"):
+        return trans_result[0]["dst"]
+    return "没有找到翻译捏"

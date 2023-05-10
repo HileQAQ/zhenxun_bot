@@ -1,18 +1,23 @@
-from models.group_member_info import GroupInfoUser
-from utils.image_utils import BuildMat
-from configs.path_config import IMAGE_PATH
-from typing import List, Union
 import asyncio
 import os
+from typing import List, Union
+
+from configs.path_config import IMAGE_PATH
+from models.group_member_info import GroupInfoUser
+from utils.image_utils import BuildMat
 
 
 async def init_rank(
-    title: str, all_user_id: List[int], all_user_data: List[int], group_id: int, total_count: int = 10
+    title: str,
+    all_user_id: List[str],
+    all_user_data: List[Union[int, float]],
+    group_id: int,
+    total_count: int = 10,
 ) -> BuildMat:
     """
-    说明：
+    说明:
         初始化通用的数据排行榜
-    参数：
+    参数:
         :param title: 排行榜标题
         :param all_user_id: 所有用户的qq号
         :param all_user_data: 所有用户需要排行的对应数据
@@ -21,16 +26,16 @@ async def init_rank(
     """
     _uname_lst = []
     _num_lst = []
-    for i in range(len(all_user_id) if len(all_user_id) < total_count else total_count):
+    for i in range(min(len(all_user_id), total_count)):
         _max = max(all_user_data)
         max_user_id = all_user_id[all_user_data.index(_max)]
         all_user_id.remove(max_user_id)
         all_user_data.remove(_max)
-        try:
-            user_name = (
-                await GroupInfoUser.get_member_info(max_user_id, group_id)
-            ).user_name
-        except AttributeError:
+        if user := await GroupInfoUser.get_or_none(
+            user_id=str(max_user_id), group_id=str(group_id)
+        ):
+            user_name = user.user_name
+        else:
             user_name = f"{max_user_id}"
         _uname_lst.append(user_name)
         _num_lst.append(_max)

@@ -1,18 +1,18 @@
 import random
 import dateparser
 from lxml import etree
-from typing import List, Optional
+from typing import List, Optional, Tuple
+from PIL import ImageDraw
 from urllib.parse import unquote
 from pydantic import ValidationError
 from nonebot.log import logger
-from nonebot.adapters.onebot.v11 import Message
-from utils.message_builder import image
+from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
+from utils.message_builder import image
 from .base_handle import BaseHandle, BaseData, UpEvent as _UpEvent, UpChar as _UpChar
 from ..config import draw_config
-from ..util import remove_prohibited_str, cn2py
+from ..util import remove_prohibited_str, cn2py, load_font
 from utils.image_utils import BuildImage
-import asyncio
 
 try:
     import ujson as json
@@ -29,7 +29,7 @@ class AzurChar(BaseData):
 
 
 class UpChar(_UpChar):
-    type_: str   # 舰娘类型
+    type_: str  # 舰娘类型
 
 
 class UpEvent(_UpEvent):
@@ -53,17 +53,19 @@ class AzurHandle(BaseHandle[AzurChar]):
             type_ = ["维修", "潜艇", "重巡", "轻航", "航母"]
         up_pool_flag = pool_name == "活动"
         # Up
-        up_ship = [x for x in self.UP_EVENT.up_char if x.zoom > 0]
+        up_ship = (
+            [x for x in self.UP_EVENT.up_char if x.zoom > 0] if self.UP_EVENT else []
+        )
         # print(up_ship)
         acquire_char = None
         if up_ship and up_pool_flag:
-            up_zoom = [(0, up_ship[0].zoom / 100)]
+            up_zoom: List[Tuple[float, float]] = [(0, up_ship[0].zoom / 100)]
             # 初始化概率
             cur_ = up_ship[0].zoom / 100
             for i in range(len(up_ship)):
                 try:
-                    up_zoom.append((cur_, cur_ + up_ship[i+1].zoom / 100))
-                    cur_ += up_ship[i+1].zoom / 100
+                    up_zoom.append((cur_, cur_ + up_ship[i + 1].zoom / 100))
+                    cur_ += up_ship[i + 1].zoom / 100
                 except IndexError:
                     pass
             rand = random.random()
@@ -71,7 +73,9 @@ class AzurHandle(BaseHandle[AzurChar]):
             for i, zoom in enumerate(up_zoom):
                 if zoom[0] <= rand <= zoom[1]:
                     try:
-                        acquire_char = [x for x in self.ALL_CHAR if x.name == up_ship[i].name][0]
+                        acquire_char = [
+                            x for x in self.ALL_CHAR if x.name == up_ship[i].name
+                        ][0]
                     except IndexError:
                         pass
         # 没有up或者未抽取到up
@@ -85,20 +89,19 @@ class AzurHandle(BaseHandle[AzurChar]):
                     self.config.AZUR_ONE_P,
                 ],
             )
-            acquire_char = random.choice([
-                x
-                for x in self.ALL_CHAR
-                if x.star == star and x.type_ in type_ and not x.limited
-            ])
+            acquire_char = random.choice(
+                [
+                    x
+                    for x in self.ALL_CHAR
+                    if x.star == star and x.type_ in type_ and not x.limited
+                ]
+            )
         return acquire_char
 
-    # async def draw(self, count: int, **kwargs) -> Message:
-    #     return await asyncio.get_event_loop().run_in_executor(None, self._draw, count)
-
-    async def draw(self, count: int, **kwargs) -> Message:
+    def draw(self, count: int, **kwargs) -> Message:
         index2card = self.get_cards(count, **kwargs)
         cards = [card[0] for card in index2card]
-        up_list = [x.name for x in self.UP_EVENT.up_char] if self.UP_EVENT.up_char else []
+        up_list = [x.name for x in self.UP_EVENT.up_char] if self.UP_EVENT else []
         result = self.format_result(index2card, **{**kwargs, "up_list": up_list})
         return image(b64=self.generate_img(cards).pic2bs4()) + result
 
@@ -108,22 +111,25 @@ class AzurHandle(BaseHandle[AzurChar]):
         sep_b = 20
         w = 100
         h = 100
-        bg = BuildImage(w + sep_w * 2, h + sep_t + sep_b, font="msyh.ttf")
-        frame_path = self.img_path / f"{card.star}_star.png"
+        bg = BuildImage(w + sep_w * 2, h + sep_t + sep_b)
+        frame_path = str(self.img_path / f"{card.star}_star.png")
         frame = BuildImage(w, h, background=frame_path)
-        img_path = self.img_path / f"{cn2py(card.name)}.png"
+        img_path = str(self.img_path / f"{cn2py(card.name)}.png")
         img = BuildImage(w, h, background=img_path)
         # 加圆角
+        frame.circle_corner(6)
         img.circle_corner(6)
         bg.paste(img, (sep_w, sep_t), alpha=True)
         bg.paste(frame, (sep_w, sep_t), alpha=True)
-        bg.circle_corner(6)
         # 加名字
         text = card.name[:6] + "..." if len(card.name) > 7 else card.name
-        text_w, text_h = bg.getsize(text)
-        bg.text(
+        font = load_font(fontsize=14)
+        text_w, text_h = font.getsize(text)
+        draw = ImageDraw.Draw(bg.markImg)
+        draw.text(
             (sep_w + (w - text_w) / 2, h + sep_t + (sep_b - text_h) / 2),
             text,
+            font=font,
             fill=["#808080", "#3b8bff", "#8000ff", "#c90", "#ee494c"][card.star - 1],
         )
         return bg
@@ -151,6 +157,7 @@ class AzurHandle(BaseHandle[AzurChar]):
         if self.UP_EVENT:
             data = {"char": json.loads(self.UP_EVENT.json())}
             self.dump_data(data, f"draw_card_up/{self.game_name}_up_char.json")
+            self.dump_data(data, f"draw_card_up/{self.game_name}_up_char.json")
 
     async def _update_info(self):
         info = {}
@@ -162,22 +169,22 @@ class AzurHandle(BaseHandle[AzurChar]):
             return
         dom = etree.HTML(result, etree.HTMLParser())
         contents = dom.xpath(
-            "//div[@class='resp-tabs-container']/div[@class='resp-tab-content']"
+            "//div[@class='mw-body-content mw-content-ltr']/div[@class='mw-parser-output']"
         )
         for index, content in enumerate(contents):
-            char_list = content.xpath("./table/tbody/tr[2]/td/div/div/div/div")
+            char_list = content.xpath("./div[@id='CardSelectTr']/div")
             for char in char_list:
                 try:
-                    name = char.xpath("./a/@title")[0]
-                    frame = char.xpath("./div/a/img/@alt")[0]
-                    avatar = char.xpath("./a/img/@srcset")[0]
+                    name = char.xpath("./div/a/@title")[0]
+                    frame = char.xpath("./div/div/a/img/@alt")[0]
+                    avatar = char.xpath("./div/a/img/@srcset")[0]
                 except IndexError:
                     continue
                 member_dict = {
                     "名称": remove_prohibited_str(name),
                     "头像": unquote(str(avatar).split(" ")[-2]),
                     "星级": self.parse_star(frame),
-                    "类型": self.parse_type(index),
+                    "类型": char.xpath("./@data-param1")[0].split(",")[1],
                 }
                 info[member_dict["名称"]] = member_dict
         # 更新额外信息
@@ -245,28 +252,6 @@ class AzurHandle(BaseHandle[AzurChar]):
         else:
             return 6
 
-    @staticmethod
-    def parse_type(index: int) -> str:
-        azur_types = [
-            "驱逐",
-            "轻巡",
-            "重巡",
-            "超巡",
-            "战巡",
-            "战列",
-            "航母",
-            "航站",
-            "轻航",
-            "重炮",
-            "维修",
-            "潜艇",
-            "运输",
-        ]
-        try:
-            return azur_types[index]
-        except IndexError:
-            return azur_types[0]
-
     async def update_up_char(self):
         url = "https://wiki.biligame.com/blhx/游戏活动表"
         result = await self.get_url(url)
@@ -290,7 +275,7 @@ class AzurHandle(BaseHandle[AzurChar]):
             up_chars = []
             for ship in ships:
                 name = ship.xpath("./tbody/tr/td[2]/p/a/@title")[0]
-                type_ = ship.xpath("./tbody/tr/td[2]/p/small/text()")[0]        # 舰船类型
+                type_ = ship.xpath("./tbody/tr/td[2]/p/small/text()")[0]  # 舰船类型
                 try:
                     p = float(str(ship.xpath(".//sup/text()")[0]).strip("%"))
                 except (IndexError, ValueError):
@@ -298,7 +283,9 @@ class AzurHandle(BaseHandle[AzurChar]):
                 star = self.parse_star(
                     ship.xpath("./tbody/tr/td[1]/div/div/div/a/img/@alt")[0]
                 )
-                up_chars.append(UpChar(name=name, star=star, limited=False, zoom=p, type_=type_))
+                up_chars.append(
+                    UpChar(name=name, star=star, limited=False, zoom=p, type_=type_)
+                )
             self.UP_EVENT = UpEvent(
                 title=title,
                 pool_img="",

@@ -1,15 +1,9 @@
-from utils.http_utils import AsyncHttpx
-from configs.config import Config
 from bs4 import BeautifulSoup
-import platform
 
-# if platform.system() == "Windows":
-#     import asyncio
-#
-#     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+from configs.config import Config
+from utils.http_utils import AsyncHttpx
 
-
-url = "http://www.eclzz.win"
+url = "http://www.eclzz.love"
 
 
 async def get_bt_info(keyword: str, page: int):
@@ -28,10 +22,7 @@ async def get_bt_info(keyword: str, page: int):
     for item in item_lst[:bt_max_num]:
         divs = item.find_all("div")
         title = (
-            str(divs[0].find("a").text)
-            .replace("<em>", "")
-            .replace("</em>", "")
-            .strip()
+            str(divs[0].find("a").text).replace("<em>", "").replace("</em>", "").strip()
         )
         spans = divs[2].find_all("span")
         type_ = spans[0].text

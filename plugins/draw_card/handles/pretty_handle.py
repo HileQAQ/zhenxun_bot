@@ -8,10 +8,10 @@ from datetime import datetime
 from urllib.parse import unquote
 from typing import List, Optional, Tuple
 from pydantic import ValidationError
-from nonebot.adapters.onebot.v11 import Message
-from utils.message_builder import image
+from nonebot.adapters.onebot.v11 import Message, MessageSegment
 from nonebot.log import logger
-import asyncio
+
+from utils.message_builder import image
 
 try:
     import ujson as json
@@ -40,9 +40,10 @@ class PrettyCard(PrettyData):
 
 class PrettyHandle(BaseHandle[PrettyData]):
     def __init__(self):
-        super().__init__("pretty", "赛马娘", "#eff2f5")
+        super().__init__("pretty", "赛马娘")
         self.data_files.append("pretty_card.json")
         self.max_star = 3
+        self.game_card_color = "#eff2f5"
         self.config = draw_config.pretty
 
         self.ALL_CHAR: List[PrettyChar] = []
@@ -129,10 +130,7 @@ class PrettyHandle(BaseHandle[PrettyData]):
             info = f"当前up池：{up_event.title}\n{info}"
         return info.strip()
 
-    async def draw(self, count: int, pool_name: str, **kwargs) -> Message:
-        return await asyncio.get_event_loop().run_in_executor(None, self._draw, count, pool_name)
-
-    def _draw(self, count: int, pool_name: str, **kwargs) -> Message:
+    def draw(self, count: int, pool_name: str, **kwargs) -> Message:
         pool_name = "char" if not pool_name else pool_name
         index2card = self.get_cards(count, pool_name)
         cards = [card[0] for card in index2card]
