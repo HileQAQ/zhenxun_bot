@@ -148,9 +148,10 @@ fantasy_card/
 data/
 log/
 backup/
-extensive_plugin/
+.idea/
 test/
 bot.py
+.DS_Store
 data/
 .env
 .env.dev
